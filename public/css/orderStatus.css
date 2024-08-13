@@ -1,0 +1,146 @@
+
+.orderstatus-container {
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.orderstatus-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.orderstatus-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.orderstatus-item img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.orderstatus-details {
+    flex: 1;
+}
+
+.orderstatus-details h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.orderstatus-details p {
+    margin: 5px 0;
+}
+
+.orderstatus-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.orderstatus-info p,
+.orderstatus-status p {
+    margin: 0;
+    padding: 5px 0;
+}
+
+.orderstatus-confirmed {
+    color: #007bff;
+}
+
+.orderstatus-cancel-button,
+.orderstatus-return-button {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.orderstatus-return-button {
+    background-color: #28a745;
+}
+
+.orderstatus-cancel-button:hover {
+    background-color: #c82333;
+}
+
+.orderstatus-return-button:hover {
+    background-color: #218838;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe00;
+    border-style: hidden;
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    color: #000;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#cancelOrderForm textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#cancelOrderForm button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#cancelOrderForm button:hover {
+    background-color: #0056b3;
+}

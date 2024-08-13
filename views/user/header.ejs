@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FITO</title>
+    <!-- <link rel="stylesheet" href="/public/css/landingpage.css"> -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/signup.css">
+    <link rel="stylesheet" href="/css/otp.css">
+    <link rel="stylesheet" href="/css/productView.css">
+    <link rel="stylesheet" href="/css/forgottenPassword.css">
+    <link rel="stylesheet" href="/css/product_list.css">
+    <link rel="stylesheet" href="/css/userPanel.css">
+    <link rel="stylesheet" href="/css/checkout.css">
+    <link rel="stylesheet" href="/css/cart.css">
+    <link rel="stylesheet" href="/css/orderStatus.css">
+    <link rel="stylesheet" href="/css/wishlist.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .wishlist-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        .wishlist-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 2px;
+            right: 184px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- header section -->
+    <header>
+        <div class="logo">
+            <span>FIT</span><span class="o">O</span>
+        </div>
+        <div class="menu-icon" id="menu-icon">
+            &#9776; <!-- This is the hamburger menu icon -->
+        </div>
+        <nav id="nav-links">
+            <div class="search-bar">
+                <input type="text" placeholder="search here.........." />
+            </div>
+            <a href="/">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact Us</a>
+            <% if(status==true) { %>
+                <a href="/cart">
+                    <img src="/images/cart1.png" alt="" style="width: 1.5rem;">
+                    <span class="cart-count">
+                        <%= cartCount %>
+                    </span>
+                </a>
+                <a href="/wishlist" class="wishlist-icon">
+                    <img src="/images/heart.png" alt="wishlist" style="width: 1.5rem;">
+                    <span class="wishlist-count">
+                        <%= wishlistCount %>
+                    </span>
+                </a>
+                <a href="/userPanel"><img src="/images/user.png" alt="" style="width: 1.5rem;"></a>
+                <a href="/logout"><img src="/images/log-out.png" alt="" style="width: 1.5rem;"></a>
+
+
+                <% } else { %>
+                    <a href="/login"><button class="login">Login</button></a>
+                    <% } %>
+
+        </nav>
+    </header>

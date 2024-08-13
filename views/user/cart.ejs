@@ -1,0 +1,188 @@
+<%- include("header") %>
+    <div class="cart-container">
+        <h2 class="cart-title">Shopping Cart</h2>
+        <div class="cart-table">
+            <div class="cart-header">
+                <span class="cart-header-item">Product</span>
+                <span class="cart-header-item">Quantity</span>
+                <span class="cart-header-item">Price</span>
+                <span class="cart-header-item">Discounted Price</span>
+            </div>
+            <div class="cart-body">
+                <% items.forEach((item)=> { %>
+                    <div class="cart-item" data-product-id="<%= item.product._id %>"
+                        data-product-stock="<%= item.product.stock %>">
+                        <div class="cart-product-info">
+                            <img src="/image/<%= item.product.product_image[0] %>" alt="Product Image">
+                            <div>
+                                <h3>
+                                    <%= item.product.product_name %>
+                                </h3>
+                                <p>Variant: Pro</p>
+                                <p>Color: Black</p>
+                            </div>
+                        </div>
+                        <div class="cart-product-quantity">
+                            <input type="number" class="quantity-input" value="<%= item.quantity %>" min="1"
+                                max="<%= item.product.stock %>">
+                        </div>
+                        <div class="cart-product-price">
+                            <span class="price">₹<%= item.product.product_price %></span>
+                            <span class="discount-price">₹<%= item.product.discountPrice %></span>
+                            <button class="cart-remove-button"
+                                onclick="removeCart('<%= item.product._id %>')">Remove</button>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+        <div class="cart-checkout-container">
+            <div class="cart-checkout-summary">
+                <div class="cart-checkout-item">
+                    <span>Grant Price</span>
+                    <span id="grant-price">: ₹<%= totalGrantPrice %></span>
+                </div>
+                <div class="cart-checkout-item">
+                    <span>Discount</span>
+                    <span id="discount-price">: Total Discount: ₹<%= discount.toFixed(2) %> (<%= discountRate %>%)<<
+                                    /span>
+                                    <p>Total Discount: ₹<%= discount.toFixed(2) %> (<%= discountRate %>%)</p>
+                </div>
+                <div class="cart-checkout-item total">
+                    <span>Total Price</span>
+                    <span id="total-price">: ₹<%= totalPrice %></span>
+                </div>
+                <% if(items.length>=1){ %>
+                    <a href="/cart-checkout"><button class="cart-checkout-button">Proceed to pay</button></a>
+                    <% } %>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Remove item from cart
+            document.querySelectorAll('.cart-remove-button').forEach(button => {
+                button.addEventListener('click', async (event) => {
+                    const cartItem = event.target.closest('.cart-item');
+                    const productId = cartItem.getAttribute('data-product-id');
+
+                    const response = await fetch('/remove', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ productId }),
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'removed') {
+                        const swalWithBootstrapButtons = Swal.mixin({
+                            customClass: {
+                                confirmButton: "btn btn-success",
+                                cancelButton: "btn btn-danger"
+                            },
+                            buttonsStyling: false
+                        });
+                        swalWithBootstrapButtons.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "No, cancel!",
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                swalWithBootstrapButtons.fire({
+                                    title: "Deleted!",
+                                    text: "Your file has been deleted.",
+                                    icon: "success"
+                                });
+                                cartItem.remove();
+                                updateCartSummary();
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                swalWithBootstrapButtons.fire({
+                                    title: "Cancelled",
+                                    text: "Your imaginary file is safe :)",
+                                    icon: "error"
+                                });
+                            }
+                        });
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+
+            // Update cart quantity
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', async (event) => {
+                    const cartItem = event.target.closest('.cart-item');
+                    const productId = cartItem.getAttribute('data-product-id');
+                    const stock = parseInt(cartItem.getAttribute('data-product-stock'));
+                    const quantity = parseInt(event.target.value);
+
+                    if (quantity > stock) {
+                        alert('Stock limit reached');
+                        event.target.value = stock;
+                        return;
+                    }
+
+                    const response = await fetch('/update-quantity', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ productId, quantity }),
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'updated') {
+                        updateCartSummary();
+                        updateStockInfo(cartItem, stock - quantity);
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Stock limit reached",
+                            text: "You can't add quantity over the product stock!",
+                        });
+
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1700);
+                    }
+                });
+            });
+
+            // Function to update cart summary
+            function updateCartSummary() {
+                let grantPrice = 0;
+                let totalDiscount = 0;
+                document.querySelectorAll('.cart-item').forEach(item => {
+                    const price = parseFloat(item.querySelector('.price').innerText.replace('₹', ''));
+                    const discountPrice = parseFloat(item.querySelector('.discount-price').innerText.replace('₹', ''));
+                    const quantity = parseInt(item.querySelector('.quantity-input').value);
+                    grantPrice += price * quantity;
+                    totalDiscount += (price - discountPrice) * quantity;
+                });
+                const totalPrice = grantPrice - totalDiscount;
+
+                document.getElementById('grant-price').innerText = `: ₹${grantPrice}`;
+                document.getElementById('discount-price').innerText = `: ₹${totalDiscount}`;
+                document.getElementById('total-price').innerText = `: ₹${totalPrice}`;
+            }
+
+            // Function to update stock info
+            function updateStockInfo(cartItem, stockLeft) {
+                const stockInfo = cartItem.querySelector('.stock-info');
+                stockInfo.innerText = `Stock left: ${stockLeft}`;
+                if (stockLeft === 0) {
+                    alert('Stock limit reached');
+                }
+            }
+        });
+    </script>
+
+    <%- include("footer") %>

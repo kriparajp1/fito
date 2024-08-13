@@ -1,0 +1,85 @@
+<style>
+    .addinfo-container {
+        margin: 86px 0px 0px 310px;
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 500px;
+    }
+
+    .addinfo-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .addinfo-input-group {
+        margin-bottom: 20px;
+    }
+
+    .addinfo-label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .addinfo-input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #333;
+        color: #f1f1f1;
+        font-size: 16px;
+    }
+
+    .addinfo-input::placeholder {
+        color: #aaa;
+    }
+
+    .addinfo-textarea {
+        height: 100px;
+        resize: none;
+    }
+
+    .addinfo-button {
+        background-color: #ff5722;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        align-self: center;
+    }
+
+    @media (max-width: 600px) {
+        .addinfo-container {
+            width: 100%;
+            padding: 20px;
+        }
+    }
+</style>
+
+<%- include("adminheader") %>
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <div class="addinfo-container">
+                <form action="/admin/addInfo" method="post" class="addinfo-form">
+                    <div class="addinfo-input-group">
+                        <label for="heading" class="addinfo-label">Heading *</label>
+                        <input type="text" id="heading" name="heading" class="addinfo-input"
+                            placeholder="Enter heading">
+                    </div>
+                    <div class="addinfo-input-group">
+                        <label for="description" class="addinfo-label">Description *</label>
+                        <textarea id="description" class="addinfo-input addinfo-textarea" name="description"
+                            placeholder="Enter description"></textarea>
+                    </div>
+                    <button type="submit" class="addinfo-button">Add Info</button>
+                </form>
+            </div>
+    </div>
+    <%- include("adminfooter") %>

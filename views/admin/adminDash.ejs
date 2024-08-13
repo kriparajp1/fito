@@ -1,0 +1,198 @@
+<%- include("adminheader")%>
+    <!-- admin dash  -->
+    <div class="admin-dashboard-container">
+        <%-include("adminNav")%>
+            <main class="admin-dashboard-main">
+                <header class="admin-dashboard-header">
+                    <h1 class="admin-dashboard-title">Sales Summary</h1>
+                    <div class="admin-dashboard-controls">
+                        <div class="admin-dashboard-year-selector">
+                            <img src="https://img.icons8.com/?size=100&id=U0Kr6lXfzkn7&format=png&color=000000"
+                                style="width: 28px;" alt="Calendar">
+                            <select>
+                                <option value="2024">2024</option>
+                                <!-- Add more years as needed -->
+                            </select>
+                        </div>
+                        <button class="admin-dashboard-download-button">Download</button>
+                    </div>
+                </header>
+                <section class="admin-dashboard-stats">
+                    <div class="admin-dashboard-stat">
+                        <h3>Revenue</h3>
+                        <p>₹<%= totals[0].totalSales %>
+                        </p>
+
+                    </div>
+                    <div class="admin-dashboard-stat">
+                        <h3>Total Orders</h3>
+                        <p>
+                            <%= orders.length %>
+                        </p>
+
+                    </div>
+                    <div class="admin-dashboard-stat">
+                        <h3>Products Sold</h3>
+                        <p>
+                            <%= totals[0].totalSalesCount %>
+                        </p>
+
+                    </div>
+                    <div class="admin-dashboard-stat">
+                        <h3>Total Customers</h3>
+                        <p>
+                            <%=users.length%>
+                        </p>
+
+                    </div>
+                </section>
+                <style>
+                    .admin-dashboard-chart {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        grid-gap: 10px;
+                        padding: 10px;
+                    }
+
+                    .admin-dashboard-chart>div {
+                        width: 100%;
+                    }
+
+                    .item {
+                        background-color: rgb(61, 59, 59);
+                        width: 20rem;
+                    }
+
+                    .item1 {
+                        background-color: rgb(61, 59, 59);
+                        width: 15rem;
+                    }
+                </style>
+                <section class="admin-dashboard-chart" style="margin-bottom: 4rem;">
+                    <div class="item">
+                        <h3>Daily Sales Chart</h3>
+                        <canvas id="dailySalesChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="item1">
+                        <h3>Weekly Sales Chart</h3>
+                        <canvas id="weeklySalesChart" width="100" height="50"></canvas>
+                    </div>
+                    <div class="item">
+                        <h3>Monthly Sales Chart</h3>
+                        <canvas id="monthlySalesChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="item">
+                        <h3>Yearly Sales Chart</h3>
+                        <canvas id="yearlySalesChart" width="400" height="200"></canvas>
+                    </div>
+                    <a href="#" class="admin-dashboard-view-details">View Details</a>
+                </section>
+            </main>
+    </div>
+    <!-- dash end -->
+    <%- include("adminfooter")%>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async function () {
+                const response = await fetch('/admin/salesData');
+                const salesData = await response.json();
+
+                const dailyCtx = document.getElementById('dailySalesChart').getContext('2d');
+                const dailySalesChart = new Chart(dailyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: salesData.dailySales.map(d => d._id),
+                        datasets: [{
+                            label: 'Daily Revenue',
+                            data: salesData.dailySales.map(d => d.totalRevenue),
+                            backgroundColor: 'rgba(75, 192, 192, 1)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                const weeklyCtx = document.getElementById('weeklySalesChart').getContext('2d');
+                new Chart(weeklyCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                        datasets: [{
+                            label: 'Weekly Revenue',
+                            data: salesData.weeklySales.map(d => d.totalRevenue),
+                            backgroundColor: [
+                                'rgba(0, 0, 255, 1)',
+                                'rgba(255, 165, 0, 1)',
+                                'rgba(238, 130, 238, 1)',
+                                'rgba(255, 255, 255, 1)',
+                                'rgba(255, 255, 0, 1)',
+                                'rgba(255, 0, 0, 1)',
+                                'rgba(0, 128, 0, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(199, 199, 199, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    }
+                });
+
+
+                const monthlyCtx = document.getElementById('monthlySalesChart').getContext('2d');
+                const monthlySalesChart = new Chart(monthlyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: salesData.monthlySales.map(d => d._id),
+                        datasets: [{
+                            label: 'Monthly Revenue',
+                            data: salesData.monthlySales.map(d => d.totalRevenue),
+                            backgroundColor: 'rgba(75, 192, 192, 1)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                const yearlyCtx = document.getElementById('yearlySalesChart').getContext('2d');
+                const yearlySalesChart = new Chart(yearlyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: salesData.yearlySales.map(d => d._id),
+                        datasets: [{
+                            label: 'Yearly Revenue',
+                            data: salesData.yearlySales.map(d => d.totalRevenue),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+        </script>

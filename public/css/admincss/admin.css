@@ -1,0 +1,192 @@
+/* admin login and common css*/
+/* General reset and styling */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #f1f1f1;
+    box-sizing: border-box;
+}
+
+/* Header styling */
+.admin-login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    padding: 20px;
+    position: fixed;
+    width: 97%;
+}
+
+.admin-login-logo span {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.admin-login-highlight {
+    color: #f60;
+}
+
+.admin-login-nav {
+    display: flex;
+    align-items: center;
+}
+
+.admin-login-search {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.admin-login-search input {
+    background: transparent;
+    border-color: #ff6600;
+    padding: 5px;
+    border-radius: 21px;
+    outline: none;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.admin-login-search-button {
+    background-color: #f60;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 35px;
+    height: 29.2px;
+    width: 38px;
+    position: absolute;
+    right: 5rem;
+
+}
+
+.admin-login-profile img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.admin-login-nav-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Main content styling */
+.admin-login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 160px); /* Adjust based on header and footer height */
+    padding: 20px;
+}
+
+.admin-login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #333;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 100%;
+}
+
+.admin-login-image img {
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+.admin-login-form-container {
+    width: 100%;
+}
+
+.admin-login-title {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-login-form input {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+}
+
+.admin-login-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f60;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.admin-login-form button:hover {
+    background-color: #e55b00;
+}
+
+/* Footer styling */
+.admin-login-footer {
+    background-color: #000;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.admin-login-footer p {
+    margin: 0;
+    color: #777;
+}
+.admin-login-mobile-nav{
+    display: none;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .admin-login-nav {
+        display: none;
+    }
+
+    .admin-login-nav-toggle {
+        display: block;
+    }
+
+    .admin-login-mobile-nav {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        background-color: #000;
+        padding: 20px;
+    }
+
+    .admin-login-mobile-nav.open {
+        display: flex;
+    }
+
+    .admin-login-main {
+        height: auto;
+    }
+
+    .admin-login-container {
+        max-width: none;
+        width: 100%;
+        margin: 20px;
+    }
+
+    .admin-login-image img {
+        width: 80px;
+        height: 80px;
+    }
+}

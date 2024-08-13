@@ -1,0 +1,150 @@
+<%- include("adminheader") %>
+    <div class="admin-product-view-container">
+        <%- include("adminNav") %>
+            <main class="admin-product-view-main" style="padding-bottom: 4rem;">
+                <header class="admin-product-view-header">
+                    <h1 class="admin-product-view-title">Products</h1>
+                    <div class="admin-product-view-search">
+                        <input type="text" placeholder="Search">
+                    </div>
+                </header>
+                <section class="admin-product-view-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th style="width:10%;">Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% product.forEach((products, i)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= (page - 1) * 6 + i + 1 %>
+                                    </td>
+                                    <td>
+                                        <%= products.product_name %><br><span class="admin-product-view-subtext">Color:
+                                                Grey</span>
+                                    </td>
+                                    <td>
+                                        <%= products.product_category ? products.product_category.categoryName
+                                            : 'No category' %>
+                                    </td>
+                                    <td>₹ <%= products.product_price %>
+                                    </td>
+                                    <td>
+                                        <%= products.product_stock %>
+                                    </td>
+                                    <td>
+                                        <div class="product-image">
+                                            <% products.product_image.forEach((image)=> { %>
+                                                <img src="/image/<%= image %>" alt="Product Image"
+                                                    style="width: 50px; height: 50px;">
+                                                <% }) %>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/editProduct/<%= products._id %>"><button
+                                                class="admin-product-view-edit">Edit</button></a>
+                                    </td>
+                                    <td>
+                                        <button class="admin-product-view-remove"
+                                            id="product-button-<%= products._id %>"
+                                            onclick="productid('<%= products._id %>')">
+                                            <%= products.unlist==true ? 'Unlist' : 'List' %>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <a href="/admin/addProduct"><button class="admin-product-view-add-new">Add New Product</button></a>
+                </section>
+
+                <div class="pagination">
+                    <% if (page> 1) { %>
+                        <a href="/admin/productManagement?page=<%= page - 1 %>">Previous</a>
+                        <% } %>
+
+                            <% for (let i=1; i <=totalPages; i++) { %>
+                                <a href="/admin/productManagement?page=<%= i %>"
+                                    class="<%= i === page ? 'active' : '' %>">
+                                    <%= i %>
+                                </a>
+                                <% } %>
+
+                                    <% if (page < totalPages) { %>
+                                        <a href="/admin/productManagement?page=<%= page + 1 %>">Next</a>
+                                        <% } %>
+                </div>
+            </main>
+    </div>
+    <%- include("adminfooter") %>
+
+        <style>
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .pagination a {
+                margin: 0 5px;
+                padding: 5px 10px;
+                text-decoration: none;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .pagination a.active {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .pagination a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+        </style>
+        <script>
+            function productid(id) {
+                const url = "/admin/listProduct";
+                const data = { id: id };
+
+                console.log(data);
+
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Product listed successfully");
+                            const button = document.getElementById(`product-button-${id}`);
+                            if (button.innerText === 'List') {
+                                button.innerText = 'Unlist';
+                                button.style.backgroundColor = 'red';
+                            } else {
+                                button.innerText = 'List';
+                                button.style.backgroundColor = 'green';
+                            }
+                        } else {
+                            alert("Failed to list product");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("An error occurred while listing the product");
+                    });
+            }
+        </script>

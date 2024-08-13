@@ -1,0 +1,301 @@
+<%- include("header")%>
+    <style>
+        /* Styles for the product view container */
+        .product-view-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Styles for the product view images section */
+        .product-view-images {
+            position: relative;
+            width: 50%;
+        }
+
+        .product-view-main-image {
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .product-view-thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .product-view-thumbnail {
+            width: 60px;
+            cursor: pointer;
+        }
+
+        /* Styles for the zoomed image */
+        .product-view-main-image.zoom {
+            transform: scale(2);
+            cursor: zoom-in;
+        }
+    </style>
+    <!-- product view -->
+    <div class="product-view-container">
+        <div class="product-view-images">
+            <img src="/image/<%= product.product_image[0] %>" alt="FITO <%= product.product_name %>"
+                class="product-view-main-image">
+            <div class="product-view-thumbnails">
+                <img src="/image/<%= product.product_image[1] %>" alt="Thumbnail 1" class="product-view-thumbnail">
+                <img src="/image/<%= product.product_image[2] %>" alt="Thumbnail 2" class="product-view-thumbnail">
+                <img src="/image/<%= product.product_image[3] %>" alt="Thumbnail 3" class="product-view-thumbnail">
+                <div class="product-view-thumbnail-placeholder"></div>
+            </div>
+        </div>
+        <div class="product-view-details">
+            <div style="display: flex;gap:10rem">
+                <h1 class="product-view-title">FITO <%= product.product_name %>
+                </h1>
+                <button class="wishlist-button"
+                    style="width: 30px;padding: 0px;background-color: transparent; border-style:none;"
+                    data-product-id="<%= product._id %>"><img style="width: 30px;"
+                        src="https://img.icons8.com/ios-filled/50/FFFFFF/filled-like.png" alt="filled-like" /></button>
+            </div>
+            <div class="product-view-reviews">
+                <span class="product-view-stars">★★★★★</span>
+                <span class="product-view-reviews-count">(150 Reviews)</span>
+                <span class="product-view-stock-status">
+                    <%= product.product_stock> 0 ? 'In Stock' : 'Out of Stock' %>
+                </span>
+            </div>
+            <div class="product-view-price">
+                <span class="product-view-price-amount">₹<%= product.product_price %></span>
+                <% if (offers.length> 0) { %>
+                    <span class="product-view-discount">Offers Available</span>
+                    <ul>
+
+                        <li>
+                            <%= totalOffer %>% off - New Price: ₹<%=product.product_price-((product.product_price *
+                                    totalOffer)/100) %>
+                        </li>
+
+                    </ul>
+                    <% } %>
+            </div>
+            <% if (product.product_stock <=10 && product.product_stock> 0) { %>
+                <div class="product-view-stock-warning" style="color: crimson;">
+                    Only <%= product.product_stock %> stocks are left. Hurry up!
+                </div>
+                <% } else if (product.product_stock===0) { %>
+                    <div class="product-view-stock-warning" style="color: crimson;">
+                        This product is currently out of stock.
+                    </div>
+                    <% } %>
+                        <p class="product-view-description">
+                            <%= product.product_description %>
+                        </p>
+                        <div class="product-view-actions">
+                            <% if (product.product_stock> 0) { %>
+                                <button onclick="addToCart('<%= product._id %>')" class="product-view-add-to-cart">Add
+                                    to Cart</button>
+                                <form action="/buy-now" method="post">
+                                    <input type="hidden" name="productId" value="<%= product._id %>">
+                                    <!-- <button type="submit" class="product-view-buy-now">Buy Now</button> -->
+                                </form>
+                                <% } %>
+                        </div>
+                        <div class="product-view-delivery-info">
+                            <div class="product-view-delivery">
+                                <h3>Free Delivery</h3>
+                                <p>Enter your postal code for Delivery Availability</p>
+                            </div>
+                            <div class="product-view-return">
+                                <h3>Return Delivery</h3>
+                                <p>Free 30 Days Delivery Returns. <a href="#">Details</a></p>
+                            </div>
+                        </div>
+        </div>
+    </div>
+    <div class="productlist-container">
+        <h2 class="productlist-title">Similar <span class="highlight">Products</span></h2>
+        <div class="productlist-grid">
+            <% products.forEach(product=> { %>
+                <div class="productlist-card">
+                    <div class="product_image">
+                        <img src="/image/<%= product.product_image[0] %>" alt="<%= product.product_name %>">
+                    </div>
+                    <div class="productlist-info">
+                        <h3>
+                            <%= product.product_name %>
+                        </h3>
+                        <p>⭐⭐⭐⭐ (75)</p>
+                        <p>₹<%= product.product_price %>
+                        </p>
+                        <a href="/productView/<%= product._id %>"><button>Buy Now</button></a>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainImage = document.querySelector('.product-view-main-image');
+            const thumbnails = document.querySelectorAll('.product-view-thumbnail');
+
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', function () {
+                    mainImage.src = thumbnail.src;
+                });
+            });
+
+            mainImage.addEventListener('mousemove', function (e) {
+                const rect = mainImage.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xPercent = (x / rect.width) * 100;
+                const yPercent = (y / rect.height) * 100;
+
+                mainImage.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                mainImage.classList.add('zoom');
+            });
+
+            mainImage.addEventListener('mouseleave', function () {
+                mainImage.classList.remove('zoom');
+                mainImage.style.transformOrigin = 'center center';
+            });
+        });
+
+        function addToCart(productId) {
+            fetch('/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId })
+            }).then((res) => {
+                return res.json();
+            }).then((data) => {
+                if (data.status === 'exists') {
+                    let timerInterval;
+                    Swal.fire({
+                        imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/cart-10295071-8402132.gif',
+                        imageWidth: 150,
+                        title: "Products already exist in the cart",
+                        html: "",
+                        timer: 2000,
+                        timerProgressBar: true,
+                    }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.timer) {
+
+                        }
+                    });
+                } else if (data.status === 'added') {
+                    Swal.fire({
+                        position: "centre",
+                        imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/cart-items-added-4677978-3901195.gif',
+                        imageWidth: 100,
+                        title: "Product added to Cart Successfully",
+                        showConfirmButton: true,
+                    });
+                } else {
+                    Swal.fire({
+                        position: "centre",
+                        imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/error-6464472-5372883.gif',
+                        imageWidth: 100,
+                        title: "Failed to add Product to Cart",
+                        showConfirmButton: true,
+                    });
+                }
+            }).catch((err) => {
+                console.error('Error adding product to cart:', error);
+                Swal.fire({
+                    position: "centre",
+                    imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/error-6464472-5372883.gif',
+                    imageWidth: 100,
+                    title: "Failed to add Product to Cart",
+                    showConfirmButton: true,
+                });
+            })
+        }
+    </script>
+    <style>
+        .swal2-popup {
+            background: rgba(0, 0, 0, 0.655) !important;
+            backdrop-filter: blur(2px);
+            border-radius: 1rem;
+        }
+
+        .swal2-title {
+            color: white;
+        }
+    </style>
+
+    <!-- wishlist -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const wishlistButtons = document.querySelectorAll('.wishlist-button');
+
+            wishlistButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const userId = 'USER_ID'; // Replace with the actual user ID
+
+                    fetch('/wishlist/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ userId, productId })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message === 'Wishlist added successfully') {
+                                Swal.fire({
+                                    title: "Wishlist Added Successfully",
+                                    imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/shopping-cart-10727346-8714056.gif',
+                                    imageWidth: 100,
+                                    imageHeight: 100,
+                                    showClass: {
+                                        popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                                `
+                                    },
+                                    hideClass: {
+                                        popup: `
+                                animate__animated
+                                animate__fadeOutDown
+                                animate__faster
+                                `
+                                    }
+                                });
+                            } else if (data.message === 'Product already in wishlist') {
+                                Swal.fire({
+                                    title: "Product Already in wishlist",
+                                    imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/product-wishlist-10311771-8414034.gif',
+                                    imageWidth: 100,
+                                    imageHeight: 100,
+                                    showClass: {
+                                        popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                                `
+                                    },
+                                    hideClass: {
+                                        popup: `
+                                animate__animated
+                                animate__fadeOutDown
+                                animate__faster
+                                `
+                                    }
+                                });
+                            } else {
+                                alert('Failed to add to wishlist');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred');
+                        });
+                });
+            });
+        });
+    </script>
+
+    <%- include("footer")%>

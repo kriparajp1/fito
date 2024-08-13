@@ -1,0 +1,220 @@
+<%- include("header") %>
+
+    <div class="userPanel-container">
+        <div class="userPanel-sidebar">
+            <h2>Manage My Account</h2>
+            <ul class="userPanel-menu">
+                <li class="userPanel-menuItem userPanel-active"><a href="#">My Profile</a></li>
+                <li class="userPanel-menuItem"><a href="/order-status">Order Status</a></li>
+                <li class="userPanel-menuItem"><a href="/uncompletedOrder">Uncompleted Orders</a></li>
+                <li class="userPanel-menuItem"><a href="#">Return Item</a></li>
+                <li class="userPanel-menuItem "><a href="/wallet">wallet</a></li>
+                <li class="userPanel-menuItem"><a href="#">My Wishlist</a></li>
+            </ul>
+            <button class="userPanel-logout">Logout</button>
+        </div>
+        <div class="userPanel-content">
+            <div class="userPanel-profileHeader">
+                <div class="userPanel-avatar">
+                    <img src="/images/user.png" alt="User Avatar">
+                </div>
+                <div class="userPanel-userInfo">
+                    <h3>
+                        <%= userData.name %>
+                    </h3>
+                    <p>
+                        <%= userData.email %>
+                    </p>
+                    <p>Nedumangad, Trivandrum, Elavattom p o</p>
+                    <a href="#" class="userPanel-editPicture">Edit Profile Picture</a>
+                </div>
+            </div>
+            <div class="userPanel-editProfile">
+                <h2>Edit Your Profile</h2>
+                <form id="updateProfileForm">
+                    <div class="userPanel-formGroup">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value="<%= userData.name %>">
+                    </div>
+                    <div class="userPanel-formGroup">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="<%= userData.email %>">
+                    </div>
+                    <div class="userPanel-formGroup">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" value="Nedumangad">
+                    </div>
+                    <div class="userPanel-formGroup">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="userPanel-formGroup">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="userPanel-formGroup">
+                        <label for="confirmNewPassword">Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                    </div>
+                    <div class="userPanel-buttons">
+                        <button type="button" class="userPanel-cancel">Cancel</button>
+                        <button type="submit" class="userPanel-save">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="userPanel-addresses">
+                <h2>Your Addresses</h2>
+                <ul>
+                    <% addresses.forEach(address=> { %>
+                        <li>
+                            <p>
+                                <%= address.name %>, <%= address.address %>, <%= address.district %>, <%= address.state
+                                                %>, <%= address.pincode %>
+                            </p>
+                            <button style="background: transparent; border-style: hidden;"
+                                onclick='openModal( <%= JSON.stringify(address) %>)'><img style="width: 47px;"
+                                    src="https://img.icons8.com/?size=100&id=102714&format=png&color=000000"
+                                    alt="edit-address"></button>
+                        </li>
+                        <% }) %>
+                </ul>
+                <button onclick="openModal()"
+                    style="width: 8rem;height: 2rem;border-radius: 10px;background-color: orangered;border-style: hidden;color: white;">Add
+                    New Address</button>
+            </div>
+        </div>
+
+        <div id="addressModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div class="checkout-billing"
+                    style="    border-radius: 1rem;border: transparent;border-style: hidden;color: white;">
+                    <h2>Add/Edit Address</h2>
+                    <form id="addressForm">
+                        <input type="hidden" id="addressId" name="addressId">
+                        <div class="checkout-form-group">
+                            <label for="name">Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="mobile">Mobile *</label>
+                            <input type="text" id="mobile" name="mobile" required>
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="pincode">Pincode *</label>
+                            <input type="text" id="pincode" name="pincode" required>
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="address">Address *</label>
+                            <input type="text" id="address" name="address" required>
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="district">District *</label>
+                            <input type="text" id="district" name="district" required>
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="state">State *</label>
+                            <input type="text" id="state" name="state" required>
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="landmark">Landmark</label>
+                            <input type="text" id="landmark" name="landmark">
+                        </div>
+                        <button type="submit"
+                            style="width: 8rem;height: 2rem;border-radius: 10px;background-color: orangered;border-style: hidden;color: white;">Save
+                            Address</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <%- include("footer") %>
+        <script>
+            function openModal(address = null) {
+                const modal = document.getElementById("addressModal");
+                const form = document.getElementById("addressForm");
+
+                if (address) {
+                    form.action = `/update-address/${address._id}`;
+                    document.getElementById("addressId").value = address._id;
+                    document.getElementById("name").value = address.name;
+                    document.getElementById("mobile").value = address.mobile;
+                    document.getElementById("pincode").value = address.pincode;
+                    document.getElementById("address").value = address.address;
+                    document.getElementById("district").value = address.district;
+                    document.getElementById("state").value = address.state;
+                    document.getElementById("landmark").value = address.landmark;
+                } else {
+                    form.action = "/add-address";
+                    form.reset();
+                }
+
+                modal.style.display = "block";
+            }
+
+            function closeModal() {
+                const modal = document.getElementById("addressModal");
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                const modal = document.getElementById("addressModal");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            document.getElementById('updateProfileForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const form = event.target;
+                const formData = new FormData(form);
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    jsonData[key] = value;
+                });
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+
+            document.getElementById('addressForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const form = event.target;
+                const formData = new FormData(form);
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    jsonData[key] = value;
+                });
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        closeModal();
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }); 
+        </script>

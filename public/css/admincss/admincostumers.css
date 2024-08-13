@@ -1,0 +1,146 @@
+
+/* Sidebar styling */
+.admin-customers-container {
+    display: flex;
+}
+
+.admin-customers-sidebar {
+    width: 250px;
+    background-color: #000;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+}
+
+.admin-customers-logo span {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-customers-highlight {
+    color: #f60;
+}
+
+.admin-customers-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-customers-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.admin-customers-menu-item img {
+    margin-right: 10px;
+}
+
+.admin-customers-menu-item.active,
+.admin-customers-menu-item:hover {
+    background-color: #f60;
+    color: #fff;
+}
+
+/* Main content styling */
+.admin-customers-main {
+    padding: 5rem 0rem 0rem 3rem;
+    margin-left: 250px;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.admin-customers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.admin-customers-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.admin-customers-search input {
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    width: 250px;
+}
+
+.admin-customers-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-customers-table th, .admin-customers-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.admin-customers-table th {
+    background-color: #333;
+}
+
+.admin-customers-table td {
+    background-color: #1a1a1a;
+}
+
+.admin-customers-unblock {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.admin-customers-block {
+    padding: 10px 20px;
+    background-color: #F44336;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .admin-customers-sidebar {
+        width: 200px;
+    }
+
+    .admin-customers-main {
+        margin-left: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-customers-sidebar {
+        display: none;
+    }
+
+    .admin-customers-main {
+        margin-left: 0;
+        padding: 0rem 1rem 0rem 3rem;
+    }
+
+    .admin-customers-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-customers-search input {
+        width: 100%;
+    }
+}

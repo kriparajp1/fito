@@ -1,0 +1,209 @@
+<%- include("header") %>
+    <style>
+        .product_input {
+            background: transparent;
+            border: grey;
+            border-style: solid;
+            border-radius: 11px;
+        }
+
+        .filter-bar-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #252525;
+            border-radius: 5px;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .filter-bar-select {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #f1f1f1;
+            font-size: 1em;
+        }
+
+        .filter-bar-search {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #f1f1f1;
+            font-size: 1em;
+            flex-grow: 1;
+        }
+
+        .filter-bar-apply {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f60;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .filter-bar-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-bar-select,
+            .filter-bar-search,
+            .filter-bar-apply {
+                width: 100%;
+            }
+        }
+    </style>
+    <div class="productlist-container">
+        <h2 class="productlist-title">Product <span class="highlight">List</span></h2>
+        <div class="product_search">
+            <div class="filter-bar-container">
+                <select class="filter-bar-select" id="category_filter">
+                    <option value="">Categories</option>
+                    <% categories.forEach((category)=> { %>
+                        <option value="<%= category.categoryName %>">
+                            <%= category.categoryName %>
+                        </option>
+                        <% }) %>
+                </select>
+                <select class="filter-bar-select" id="sortOptions">
+                    <option value="default">Sort by</option>
+                    <option value="price-asc">Price Low to High</option>
+                    <option value="price-desc">Price High to Low</option>
+                    <option value="name-asc">Name A-Z</option>
+                    <option value="name-desc">Name Z-A</option>
+                </select>
+                <input type="text" class="filter-bar-search" placeholder="Search" id="searchInput">
+                <button class="filter-bar-apply" id="filterButton">APPLY</button>
+            </div>
+            <div id="productList"></div>
+            <div class="productlist-grid" id="productList">
+                <% product.forEach(product=> { %>
+                    <div class="productlist-card">
+                        <a href="/productView/<%= product._id %>">
+                            <div class="product_image">
+                                <img src="/image/<%= product.product_image[0] %>" alt="<%= product.product_name %>">
+                            </div>
+                        </a>
+                        <div class="productlist-info">
+                            <h3>
+                                <%= product.product_name %>
+                            </h3>
+                            <p>⭐⭐⭐⭐ (75)</p>
+                            <p>Original Price: ₹<%= product.product_price %>
+                            </p>
+                            <% if (product.product_price !==Math.floor(product.offerPrice)) { %>
+                                <p style="color: red;">Offer Price: ₹<%= product.offerPrice %>
+                                </p>
+                                <% } %>
+
+                                    <div class="wishlistButton" style="position: absolute;translate: 753% -351%;">
+                                        <button class="wishlist-button"
+                                            style="width: 30px;padding: 0px;background-color: transparent;"
+                                            data-product-id="<%= product._id %>">
+                                            <img style="width: 30px;"
+                                                src="https://img.icons8.com/ios-filled/50/FFFFFF/filled-like.png"
+                                                alt="filled-like" />
+                                        </button>
+                                    </div>
+
+                                    <% if (product.product_stock> 0) { %>
+                                        <a href="/productView/<%= product._id %>"><button>Buy Now</button></a>
+                                        <% } else { %>
+                                            <p style="color: crimson;">Out of Stock</p>
+                                            <% } %>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('filterButton').addEventListener('click', function () {
+                const sortValue = document.getElementById('sortOptions').value;
+                const categoryValue = document.getElementById("category_filter").value;
+                const searchValue = document.getElementById('searchInput').value;
+                const newUrl = `/productList?search=${encodeURIComponent(searchValue)}&sort=${encodeURIComponent(sortValue)}&category=${encodeURIComponent(categoryValue)}`;
+                window.location.href = newUrl;
+            });        
+        </script>
+
+        <!-- wishlist -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const wishlistButtons = document.querySelectorAll('.wishlist-button');
+
+                wishlistButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const productId = this.getAttribute('data-product-id');
+                        const userId = 'USER_ID'; // Replace with the actual user ID
+
+                        fetch('/wishlist/add', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ userId, productId })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.message === 'Wishlist added successfully') {
+                                    Swal.fire({
+                                        title: "Wishlist Added Successfully",
+                                        imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/shopping-cart-10727346-8714056.gif',
+                                        imageWidth: 100,
+                                        imageHeight: 100,
+                                        showClass: {
+                                            popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                              `
+                                        },
+                                        hideClass: {
+                                            popup: `
+                                animate__animated
+                                animate__fadeOutDown
+                                animate__faster
+                              `
+                                        }
+                                    });
+                                } else if (data.message === 'Product already in wishlist') {
+                                    Swal.fire({
+                                        title: "Product Already in wishlist",
+                                        imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/product-wishlist-10311771-8414034.gif',
+                                        imageWidth: 100,
+                                        imageHeight: 100,
+                                        showClass: {
+                                            popup: `
+                                animate__animated
+                                animate__fadeInUp
+                                animate__faster
+                              `
+                                        },
+                                        hideClass: {
+                                            popup: `
+                                animate__animated
+                                animate__fadeOutDown
+                                animate__faster
+                              `
+                                        }
+                                    });
+                                } else {
+                                    alert('Failed to add to wishlist');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred');
+                            });
+                    });
+                });
+            });
+        </script>
+        <%- include("footer") %>

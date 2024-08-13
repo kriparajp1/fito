@@ -1,0 +1,160 @@
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #1a1a1a;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+    }
+
+    .success-container {
+        text-align: center;
+        background-color: #232323;
+        padding: 3em;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transform: scale(0);
+        animation: scale-in 0.5s forwards ease-out;
+    }
+
+    @keyframes scale-in {
+        to {
+            transform: scale(1);
+        }
+    }
+
+    .checkmark-container {
+        margin-bottom: 1em;
+    }
+
+    .checkmark {
+        width: 100px;
+        height: 100px;
+    }
+
+    .checkmark__circle {
+        stroke: #4caf50;
+        stroke-width: 4;
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-linecap: round;
+        animation: draw-circle 1s ease-out forwards;
+    }
+
+    .checkmark__check {
+        stroke: #4caf50;
+        stroke-width: 4;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        stroke-linecap: round;
+        animation: draw-check 1s 0.5s ease-out forwards;
+    }
+
+    @keyframes draw-circle {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes draw-check {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    .success-message {
+        color: #4caf50;
+        margin-bottom: 0.5em;
+        opacity: 0;
+        animation: fade-in 1s 0.5s forwards;
+    }
+
+    .order-details {
+        color: #fefeeb;
+        margin-bottom: 1.5em;
+        opacity: 0;
+        animation: fade-in 1s 1s forwards;
+    }
+
+    @keyframes fade-in {
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="success-container">
+    <div class="checkmark-container">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark__circle" cx="26" cy="26" r="22" fill="none" />
+            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+        </svg>
+    </div>
+    <h1 style="color: #Fefeeb;">Thank you.</h1>
+    <h1 class="success-message">payment failed !</h1>
+    <p class="order-details">don't worry u can continue the order on uncomplete order page and retry order.</p>
+    <p style="color: #555;">
+        <!-- We will immediatelly process your and it will be delivered in 2 - 5 business days. -->
+    </p>
+    <div class="d-flex justify-content-center gap-5 mt-5">
+        <a href="/order-Status" class="btn btn-danger d-flex">My Orders</a>
+        <a href="/" class="btn btn-danger d-flex">Continue Shopping</a>
+    </div>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.querySelectorAll('.orderstatus-return-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const orderId = this.getAttribute('data-order-id');
+            fetch(`/create-order/${orderId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const options = {
+                        "key": "rzp_test_D1hrPYtWhv0psE", // Enter the Key ID generated from the Dashboard
+                        "amount": data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "fito",
+                        "description": "Test Transaction",
+                        "image": "https://example.com/your_logo",
+                        "order_id": data.orderId, //This is a sample Order ID. Pass the `id` obtained in the response of createOrder API call
+                        "handler": function (response) {
+                            fetch(`/update-order/${orderId}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    paymentId: response.razorpay_payment_id,
+                                    orderId: response.razorpay_order_id,
+                                    signature: response.razorpay_signature
+                                })
+                            }).then(res => res.json()).then(data => {
+                                if (data.success) {
+                                    alert('Payment successful');
+                                    location.reload(); // reload the page to reflect the updated order status
+                                } else {
+                                    alert('Payment verification failed');
+                                }
+                            });
+                        },
+                        "prefill": {
+                            "name": "Gaurav Kumar",
+                            "email": "gaurav.kumar@example.com",
+                            "contact": "9999999999"
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+                    const rzp1 = new Razorpay(options);
+                    rzp1.open();
+                });
+        });
+    });
+</script>

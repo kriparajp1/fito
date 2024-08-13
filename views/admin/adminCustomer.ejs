@@ -1,0 +1,64 @@
+<%- include("adminheader")%>
+    <!-- costomers dashboard -->
+    <div class="admin-customers-container">
+        <%-include("adminNav")%>
+            <main class="admin-customers-main" style="padding: 5rem 11px 0rem 45px;" style="padding-bottom: 4rem;">
+                <header class="admin-customers-header">
+                    <h1 class="admin-customers-title">Customers</h1>
+                    <div class="admin-customers-search">
+                        <form action="/admin/adminCustomer" method="GET">
+                            <input type="text" placeholder="Search For User" name="search">
+                        </form>
+                    </div>
+                </header>
+                <section class="admin-customers-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <%users.forEach((user,index)=>{ %>
+                                <tr>
+                                    <td>
+                                        <%= index+1 %>
+                                    </td>
+                                    <td>
+                                        <%= user.name%>
+                                    </td>
+                                    <td>
+                                        <%= user.email%>
+                                    </td>
+                                    <td>
+                                        <%= user.phone%>
+                                    </td>
+                                    <td>
+                                        <%= user.address%>
+                                    </td>
+                                    <td>
+                                        <% if (user.status==='active' ){ %>
+                                            <a href="/admin/blockUser/<%=user.id%>">
+                                                <button class="admin-customers-unblock">block</button>
+                                            </a>
+                                            <% } else { %>
+                                                <a href="/admin/unBlockUser/<%=user.id%>">
+                                                    <button class="admin-customers-block">unBlock</button>
+                                                </a>
+                                                <% } %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+    </div>
+
+    <%-include("adminfooter")%>

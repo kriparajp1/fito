@@ -1,0 +1,150 @@
+<%- include("adminheader") %>
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <main class="category-main">
+                <% if(status=="add" ){ %>
+                    <div class="addoffer-container">
+                        <form id="offer-form" class="addoffer-form">
+                            <h1 class="addoffer-title">Add Offer</h1>
+                            <div class="addoffer-input-group">
+                                <label for="offer-type" class="addoffer-label">Offer Type</label>
+                                <select id="offer-type" name="offerType" class="addoffer-input" required>
+                                    <option value="" disabled selected>Select offer type</option>
+                                    <option value="productdb">Product</option>
+                                    <option value="category">Category</option>
+                                </select>
+                            </div>
+                            <div class="addoffer-input-group" id="reference-group" style="display: none;">
+                                <label for="reference" class="addoffer-label">Reference *</label>
+                                <select id="reference" name="referenceId" class="addoffer-input" required>
+                                    <!-- Options will be dynamically added here -->
+                                </select>
+                            </div>
+                            <div class="addoffer-input-group">
+                                <label for="discount" class="addoffer-label">Discount Percent *</label>
+                                <input type="number" id="discount" name="discountPercent" min="1" max="100"
+                                    class="addoffer-input" placeholder="Enter discount percent" required>
+                            </div>
+                            <button type="submit" class="addoffer-button">Add Offer</button>
+                        </form>
+                    </div>
+                    <% } else { %>
+                        <div class="addoffer-container">
+                            <form id="offer-form" class="addoffer-form">
+                                <h1 class="addoffer-title">Edit Offer</h1>
+                                <input type="hidden" id="offer-id" name="offerId" value="<%= offer._id %>">
+                                <div class="addoffer-input-group">
+                                    <label for="offer-type" class="addoffer-label">Offer Type</label>
+                                    <select id="offer-type" name="offerType" class="addoffer-input" required>
+                                        <option value="" disabled>Select offer type</option>
+                                        <option value="productdb" <%=offer.offerType==='productdb' ? 'selected' : '' %>
+                                            >Product</option>
+                                        <option value="category" <%=offer.offerType==='category' ? 'selected' : '' %>
+                                            >Category</option>
+                                    </select>
+                                </div>
+                                <div class="addoffer-input-group" id="reference-group">
+                                    <label for="reference" class="addoffer-label">Reference *</label>
+                                    <select id="reference" name="referenceId" class="addoffer-input" required>
+                                        <option value="<%= currentReference.id %>" selected>
+                                            <%= currentReference.name %>
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="addoffer-input-group">
+                                    <label for="discount" class="addoffer-label">Discount Percent *</label>
+                                    <input type="number" id="discount" name="discountPercent" class="addoffer-input"
+                                        placeholder="Enter discount percent" min="1" max="100"
+                                        value="<%= offer.discountPercent %>" required>
+                                </div>
+                                <button type="submit" class="addoffer-button">Edit Offer</button>
+                            </form>
+                        </div>
+                        <% } %>
+            </main>
+    </div>
+    <%- include("adminfooter") %>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const offerTypeSelect = document.getElementById('offer-type');
+                const referenceGroup = document.getElementById('reference-group');
+                const referenceSelect = document.getElementById('reference');
+
+                function loadReferences(offerType) {
+                    referenceSelect.innerHTML = ''; // Clear previous options
+
+                    // Fetch products or categories based on offer type
+                    fetch(`/admin/getReferences?offerType=${offerType}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(item => {
+                                const option = document.createElement('option');
+                                option.value = item._id;
+                                option.text = item.categoryName || item.product_name; // Adjust based on your schema
+                                referenceSelect.appendChild(option);
+                            });
+                            referenceGroup.style.display = 'block';
+                        })
+                        .catch(error => console.error('Error fetching references:', error));
+                }
+
+                // Show reference group if editing an offer
+                if (offerTypeSelect.value) {
+                    loadReferences(offerTypeSelect.value);
+                }
+
+                offerTypeSelect.addEventListener('change', function () {
+                    const offerType = this.value;
+                    if (offerType) {
+                        loadReferences(offerType);
+                    } else {
+                        referenceGroup.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('offer-form').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const offerId = document.getElementById('offer-id') ? document.getElementById('offer-id').value : null;
+                    const url = offerId ? `/admin/editOffer/${offerId}` : '/admin/addOffer';
+                    const method = offerId ? 'PUT' : 'POST';
+
+                    fetch(url, {
+                        method: method,
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.message === 'This product or category already has an offer') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.message
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: result.message
+                                }).then(() => {
+                                    window.location.href = '/admin/offer';
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong. Please try again.'
+                            });
+                            console.log('Error submitting form:', error);
+                        });
+                });
+            });
+        </script>

@@ -1,0 +1,292 @@
+<%- include("header")%>
+    <style>
+        .user-category-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+            position: relative;
+        }
+
+        .user-category-card {
+            background-color: #252525;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 250px;
+        }
+
+        .user-category-name {
+            font-size: 1.5em;
+            margin: 0 0 10px;
+        }
+
+        .user-category-description {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        /* Alternating alignment using nth-child */
+        .user-category-card:nth-child(even) {
+            align-self: flex-start;
+            margin: 0rem 15rem;
+        }
+
+        .user-category-card:nth-child(odd) {
+            align-self: flex-end;
+            margin: 0rem 15rem 0rem;
+        }
+
+        /* Vertical line */
+        .user-category-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: #f1f1f1;
+            transform: translateX(-50%);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .user-category-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .user-category-card {
+                width: 90%;
+                align-self: center !important;
+            }
+
+            .user-category-container::before {
+                display: none;
+            }
+        }
+
+        .typewriter h1 {
+            overflow: hidden;
+            border-right: .15em solid orange;
+            white-space: nowrap;
+            margin: 5px auto;
+            letter-spacing: .15em;
+            animation:
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+
+        /* The typing effect */
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: orange;
+            }
+        }
+    </style>
+    <!-- main section -->
+    <main>
+        <section class="hero">
+            <div class="hero-content typewriter ">
+                <h1><span class="quote ">"</span>FITO: Powering Your Fitness Journey<span class="quote">"</span></h1>
+                <a href="/productList"><button class="view-products">View Products</button></a>
+                <div class="stats">
+                    <div class="animate__animated animate__rollIn">
+                        <span>10K+</span>
+                        <p>Employers</p>
+                    </div>
+                    <div class="animate__animated animate__rollIn">
+                        <span>1M+</span>
+                        <p>Products Sold</p>
+                    </div>
+                    <div class="animate__animated animate__rollIn">
+                        <span>1M+</span>
+                        <p>Happy Customers</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- latest products section -->
+        <section class="latest-products">
+            <h2>Latest <span class="highlight">Products</span></h2>
+            <div class="container">
+                <% products.forEach(products=>{ %>
+                    <div class="product" data-aos="fade-down">
+                        <div class="product-image-div">
+                            <img src="/image/<%=products.product_image[0] %>" alt="MaxTone Dynamo">
+                            <a href="/productView/<%= products._id %>"><button class="buy-button">Buy now</button></a>
+                        </div>
+                        <div class="product-info">
+                            <h1><span class="brand">FIT</span><span class="highlight">O</span></h1>
+                            <h2>
+                                <%= products.product_name %>
+                            </h2>
+                            <!-- <p class="tagline">Row Your Way to Peak Fitness</p> -->
+                            <p class="description">
+                                <%= products.product_description %>
+                            </p>
+                            <p class="price">₹<%= products.product_price%>
+                            </p>
+
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+        </section>
+    </main>
+    <!-- our product section -->
+    <div class="ourproduct-container">
+        <div class="ourproduct-header">
+            <h1>Our Products</h1>
+            <h2>Elevate Your Fitness Journey with Our <%=categories.length %> Essential Categories</h2>
+            <p class="ourproduct-subheading">"We Empower Your Path to Fitness"</p>
+        </div>
+        <div class="user-category-container">
+            <% categories.forEach((category)=>{ %>
+                <div class="user-category-card" data-aos="flip-down">
+                    <h2 class="user-category-name">
+                        <%= category.categoryName %>
+                    </h2>
+                    <p class="user-category-description">
+                        <%= category.description %>
+                    </p>
+                    <br>
+                    <a href="/productList?search=&sort=&category=<%= category.categoryName %>"
+                        style="font-size:medium;"><button style="padding: 3px 7px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;">View Products</button></a>
+                </div>
+                <% }) %>
+
+        </div>
+    </div>
+    <!-- our company section -->
+    <div class="ourcompany-container" data-aos="zoom-in">
+        <div class="ourcompany-header">
+            <h1>
+                <%=info[0].heading%>
+            </h1>
+            <p>
+                <%= info[0].description%>
+            </p>
+        </div>
+    </div>
+
+    <!-- footer section -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <footer class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section footer-brand">
+                <h2>FITO</h2>
+                <p>Follow us on</p>
+                <div class="footer-socials">
+                    <a href="#"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
+                            viewBox="0,0,256,256" style="fill:#000000;">
+                            <g fill="#f97310" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                                stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                                font-family="none" font-weight="none" font-size="none" text-anchor="none"
+                                style="mix-blend-mode: normal">
+                                <g transform="scale(5.12,5.12)">
+                                    <path
+                                        d="M16,3c-7.17,0 -13,5.83 -13,13v18c0,7.17 5.83,13 13,13h18c7.17,0 13,-5.83 13,-13v-18c0,-7.17 -5.83,-13 -13,-13zM37,11c1.1,0 2,0.9 2,2c0,1.1 -0.9,2 -2,2c-1.1,0 -2,-0.9 -2,-2c0,-1.1 0.9,-2 2,-2zM25,14c6.07,0 11,4.93 11,11c0,6.07 -4.93,11 -11,11c-6.07,0 -11,-4.93 -11,-11c0,-6.07 4.93,-11 11,-11zM25,16c-4.96,0 -9,4.04 -9,9c0,4.96 4.04,9 9,9c4.96,0 9,-4.04 9,-9c0,-4.96 -4.04,-9 -9,-9z">
+                                    </path>
+                                </g>
+                            </g>
+                        </svg></a>
+                    <a href="#"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
+                            viewBox="0,0,256,256" style="fill:#000000;">
+                            <g fill="#f97310" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                                stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                                font-family="none" font-weight="none" font-size="none" text-anchor="none"
+                                style="mix-blend-mode: normal">
+                                <g transform="scale(5.12,5.12)">
+                                    <path
+                                        d="M6.91992,6l14.2168,20.72656l-14.9082,17.27344h3.17773l13.13867,-15.22266l10.44141,15.22266h10.01367l-14.87695,-21.6875l14.08008,-16.3125h-3.17578l-12.31055,14.26172l-9.7832,-14.26172z">
+                                    </path>
+                                </g>
+                            </g>
+                        </svg></a>
+                    <a href="#"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
+                            viewBox="0,0,256,256" style="fill:#000000;">
+                            <g fill="#f97310" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                                stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                                font-family="none" font-weight="none" font-size="none" text-anchor="none"
+                                style="mix-blend-mode: normal">
+                                <g transform="scale(5.12,5.12)">
+                                    <path
+                                        d="M25,3c-12.15,0 -22,9.85 -22,22c0,11.03 8.125,20.137 18.712,21.728v-15.897h-5.443v-5.783h5.443v-3.848c0,-6.371 3.104,-9.168 8.399,-9.168c2.536,0 3.877,0.188 4.512,0.274v5.048h-3.612c-2.248,0 -3.033,2.131 -3.033,4.533v3.161h6.588l-0.894,5.783h-5.694v15.944c10.738,-1.457 19.022,-10.638 19.022,-21.775c0,-12.15 -9.85,-22 -22,-22z">
+                                    </path>
+                                </g>
+                            </g>
+                        </svg></a>
+                </div>
+            </div>
+            <div class="footer-section footer-contact">
+                <h3>Contact</h3>
+                <p>FITO, Kazhakuttam, Kerala, India</p>
+                <p>fito@gmail.com</p>
+                <p>+91-123-456-7890</p>
+            </div>
+            <div class="footer-section footer-account">
+                <h3>Account</h3>
+                <ul>
+                    <li><a href="#">My Account</a></li>
+                    <li><a href="#">Login / Register</a></li>
+                    <li><a href="#">Cart</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Shop</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms Of Use</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-subscribe">
+                <h3>Exclusive</h3>
+                <p>Subscribe</p>
+                <p>Get 10% off your first order</p>
+                <form>
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Copyright FITO 2024. All right reserved</p>
+        </div>
+    </footer>
+    <script src="/script/script.js"></script>
+    </body>
+
+    </html>

@@ -1,0 +1,107 @@
+<%- include("adminheader") %>
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <main class="category-main">
+                <div class="offer-container">
+                    <div class="offer-header">
+                        <h1>Offers</h1>
+                        <a href="/admin/addOffer"><button class="offer-add-button">Add Offer</button></a>
+                        <input type="text" class="offer-search" placeholder="Search">
+                    </div>
+                    <table class="offer-table">
+                        <thead>
+                            <tr>
+                                <th>Offer Target</th>
+                                <th>Offer For</th>
+                                <th>Discount</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% offers.forEach((offer,index)=>{ %>
+                                <tr>
+                                    <td>
+                                        <%=offer.offerType %>
+                                    </td>
+                                    <% if(offer.offerType==="productdb" ){ %>
+                                        <td>
+                                            <%=offer.referenceId.product_name%>
+                                        </td>
+                                        <% } else{ %>
+                                            <td>
+                                                <%=offer.referenceId.categoryName%>
+                                            </td>
+                                            <% } %>
+                                                <td>
+                                                    <%= offer.discountPercent %>% off
+                                                </td>
+                                                <td>
+                                                    <a href="/admin/editOffers/<%=offer._id%>"><button
+                                                            class="offer-edit-button">Edit</button></a>
+                                                    <button class="offer-remove-button"
+                                                        data-offer-id="<%= offer._id %>">Remove</button>
+                                                </td>
+                                </tr>
+                                <% }) %>
+
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+    </div>
+    <%- include("adminfooter") %>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const removeButtons = document.querySelectorAll('.offer-remove-button');
+
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const offerId = this.getAttribute('data-offer-id');
+
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                fetch(`/admin/removeOffer/${offerId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            Swal.fire(
+                                                'Deleted!',
+                                                'Your offer has been deleted.',
+                                                'success'
+                                            );
+                                            document.getElementById(`offer-${offerId}`).remove();
+                                        } else {
+                                            Swal.fire(
+                                                'Deleted!',
+                                                'Your offer has been deleted.',
+                                                'success'
+                                            );
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error removing offer:', error);
+                                        Swal.fire(
+                                            'Deleted!',
+                                            'Your offer has been deleted.',
+                                            'success'
+                                        );
+                                    });
+                            }
+                        });
+                    });
+                });
+            });
+        </script>

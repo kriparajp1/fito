@@ -1,0 +1,138 @@
+
+.coupons-container {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.coupons-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.coupons-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.coupons-search {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.coupons-search-input {
+    border: none;
+    background: none;
+    color: #f1f1f1;
+    outline: none;
+    font-size: 14px;
+    padding: 5px;
+}
+
+.coupons-search-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.coupons-search-button img {
+    width: 16px;
+    height: 16px;
+}
+
+.coupons-table {
+    width: 100%;
+}
+
+.coupons-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+}
+
+.coupons-header-row {
+    font-weight: bold;
+}
+
+.coupons-cell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.coupons-cell:nth-child(1) {
+    flex: 3;
+}
+
+.coupons-cell:nth-child(2) {
+    justify-content: center;
+}
+
+.coupons-cell:nth-child(3) {
+    justify-content: flex-end;
+}
+
+.coupons-edit-button, .coupons-remove-button {
+    background-color: #ff9800;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: 5px;
+    cursor: pointer;
+    color: #121212;
+}
+
+.coupons-remove-button {
+    background-color: #f44336;
+}
+
+.coupons-add-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.coupons-add-button {
+    background-color: #ff5722;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .coupons-container {
+        padding: 10px;
+    }
+
+    .coupons-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .coupons-cell {
+        justify-content: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .coupons-cell:nth-child(3) {
+        justify-content: flex-start;
+    }
+
+    .coupons-add-button {
+        width: 100%;
+        padding: 15px;
+    }
+}

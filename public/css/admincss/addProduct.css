@@ -1,0 +1,154 @@
+
+/* Sidebar styling */
+.admin-product-add-container {
+    display: flex;
+}
+
+.admin-product-add-sidebar {
+    width: 250px;
+    background-color: #000;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+}
+
+.admin-product-add-logo span {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.admin-product-add-highlight {
+    color: #f60;
+}
+
+.admin-product-add-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-product-add-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.admin-product-add-menu-item img {
+    margin-right: 10px;
+}
+
+.admin-product-add-menu-item.active,
+.admin-product-add-menu-item:hover {
+    background-color: #f60;
+    color: #fff;
+}
+
+/* Main content styling */
+.admin-product-add-main {
+    margin-left: 250px;
+    padding: 6rem 1rem 0rem 3rem;
+    flex-grow: 1;
+}
+
+.admin-product-add-header {
+    margin-bottom: 20px;
+}
+
+.admin-product-add-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.admin-product-add-form {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.admin-product-add-form-group {
+    margin-bottom: 20px;
+}
+
+.admin-product-add-form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.admin-product-add-form-group input,
+.admin-product-add-form-group select,
+.admin-product-add-form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+}
+
+.admin-product-add-form-group textarea {
+    resize: none;
+    height: 100px;
+}
+
+.admin-product-add-images {
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin-product-add-image-upload input {
+    width: 23%;
+    padding: 20px;
+    border: 2px dashed #555;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+}
+
+.admin-product-add-submit {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f60;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .admin-product-add-sidebar {
+        width: 200px;
+    }
+
+    .admin-product-add-main {
+        margin-left: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-product-add-sidebar {
+        display: none;
+    }
+
+    .admin-product-add-main {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .admin-product-add-images {
+        flex-direction: column;
+    }
+
+    .admin-product-add-image-upload input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

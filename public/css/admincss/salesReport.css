@@ -1,0 +1,102 @@
+.salesreport-container {
+    width: 90%;
+    max-width: 1200px;
+    background-color: #1f1f1f;
+    padding: 20px;
+    margin: 5rem 1rem 0rem 19rem;
+    border-radius: 8px;
+}
+
+.salesreport-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.salesreport-filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.salesreport-select, .salesreport-date, .salesreport-button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.salesreport-select, .salesreport-date {
+    background-color: #333;
+    color: #fff;
+}
+
+.salesreport-button {
+    background-color: #f90;
+    color: #fff;
+    cursor: pointer;
+}
+
+.salesreport-button:hover {
+    background-color: #e68000;
+}
+
+.salesreport-summary {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.salesreport-summary-item {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 10px;
+    flex-grow: 1;
+    flex-basis: 180px;
+}
+
+.salesreport-summary-value {
+    color: #00ff00;
+    font-size: 1.5em;
+}
+
+.salesreport-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.salesreport-table th, .salesreport-table td {
+    padding: 15px;
+    text-align: left;
+}
+
+.salesreport-table th {
+    background-color: #333;
+}
+
+.salesreport-table tbody tr:nth-child(odd) {
+    background-color: #2a2a2a;
+}
+
+.salesreport-table tbody tr:nth-child(even) {
+    background-color: #1f1f1f;
+}
+
+.salesreport-edit-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f90;
+    color: #fff;
+    cursor: pointer;
+}
+
+.salesreport-edit-button:hover {
+    background-color: #e68000;
+}

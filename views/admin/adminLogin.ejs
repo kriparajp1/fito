@@ -1,0 +1,45 @@
+<%- include("adminheader") %>
+    <!-- admin login -->
+    <main class="admin-login-main">
+        <div class="admin-login-container">
+            <div class="admin-login-image" style="position: absolute;top: 30px;">
+                <img src="/images/dumbell.png" alt="Dumbbell">
+            </div>
+            <div class="admin-login-form-container">
+                <h2 class="admin-login-title">Admin Login</h2>
+                <form class="admin-login-form" action="admin/adminLoginPost" method="post"
+                    onsubmit="return validateForm()">
+                    <input type="email" name="email" id="email" placeholder="Email" required>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <div id="error-message" style="color: red;"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            errorMessage.textContent = '';
+
+            // Email validation
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!emailPattern.test(email)) {
+                errorMessage.textContent = 'Please enter a valid email address.';
+                return false;
+            }
+
+            // Password validation
+            if (password.length < 6) {
+                errorMessage.textContent = 'Password must be at least 6 characters long.';
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+    <%-include("adminfooter")%>

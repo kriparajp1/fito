@@ -1,0 +1,82 @@
+<%- include("adminheader") %>
+    <style>
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #000;
+        }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
+    <!-- category -->
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <main class="category-main" style="padding-bottom: 5rem;">
+                <header class="category-header">
+                    <h1 class="category-title">small Footer Info</h1>
+                    <a href="/admin/addInfo"><button class="category-add-button">Add Info</button></a>
+                </header>
+                <section class="category-list">
+                    <% info.forEach((info, i)=> { %>
+                        <div class="category-item">
+                            <h3 class="category-item-name">
+                                <%= info.heading %>
+                            </h3>
+                            <p class="category-item-description">
+                                <%= info.description %>
+                            </p>
+                            <div class="categoryEditUpdate" style="display:flex; flex-direction:row;">
+                                <div class="categoryButton1">
+                                    <% if (!info.blocked) { %>
+                                        <a href="">
+                                            <button class="admin-customers-block">unblock</button>
+                                        </a>
+                                        <% } else { %>
+                                            <a href="">
+                                                <button class="admin-customers-unblock">block</button>
+                                            </a>
+                                            <% } %>
+                                </div>
+                                <div class="categoryButton2">
+                                    <a href="">
+                                        <button
+                                            style="width: 4rem;background-color: orange;border-radius: 6px;border-style: hidden;height: 36px;margin-left: 14px;">Edit</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </section>
+            </main>
+    </div>
+
+    <%- include("adminfooter") %>

@@ -1,0 +1,235 @@
+<%- include('header') %>
+
+    <!-- signup portion -->
+    <!-- signup portion -->
+    <div class="signup-container">
+        <div class="signup-image">
+            <img src="/images/login/wpaper1.jpg" alt="Weights and Coffee Cup">
+        </div>
+        <div class="signup-form">
+            <h2>Create an account</h2>
+            <form id="signup-form" action="/signuppost" method="post">
+                <input type="text" name="name" class="signup-input" placeholder="Name" id="name" required>
+                <span id="nameError" class="error"></span><br><br>
+                <input type="text" name="phone" id="phone" class="signup-input" placeholder="Phone" required>
+                <span id="phoneError" class="error"></span><br><br>
+                <input type="email" id="email" name="email" class="signup-input" placeholder="Email" required>
+                <span id="emailError" class="error"></span><br><br>
+                <input type="password" id="password" name="password" class="signup-input" placeholder="Password"
+                    required>
+                <span id="passwordError" class="error"></span><br><br>
+                <div class="signup-checkbox">
+                    <input type="checkbox" id="terms" class="signup-checkbox-input" name="checkbox" required>
+                    <label for="terms" class="signup-checkbox-label">I agree to the terms</label>
+                </div>
+                <button type="submit" class="signup-button" id="create-account-button">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- OTP verification popup -->
+    <div id="signup-otp-container" class="signup-otp-container" style="display: none;">
+        <div class="signup-otp-box">
+            <h2>Enter The OTP</h2>
+            <div class="signup-otp-inputs">
+                <input type="text" class="signup-otp-input" maxlength="4">
+            </div>
+            <button id="validate-otp-button">Validate</button>
+            <div class="signup-otp-timer">
+                <span class="signup-otp-time">01:00</span>
+            </div>
+            <div class="signup-otp-resend">
+                <span>Didn't get the code? <a href="#" class="signup-otp-resend-link" id="resend-otp-link"
+                        style="pointer-events: none; color: grey;">Resend</a></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer section -->
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            document.getElementById("emailError").innerText = "";
+            document.getElementById("passwordError").innerText = "";
+            document.getElementById("phoneError").innerText = "";
+            document.getElementById("nameError").innerText = ""
+
+            var email = document.getElementById("email").value;
+            var emailError = document.getElementById("emailError");
+            var password = document.getElementById("password").value;
+            var passwordError = document.getElementById("passwordError");
+
+            var phone = document.getElementById("phone").value
+            var phoneError = document.getElementById("phoneError")
+
+            var name = document.getElementById("name").value;
+            var nameError = document.getElementById("nameError")
+            var isValid = true;
+
+            if (!validatePhone(phone)) {
+                phoneError.innerText = "Please enter a valid phone number eg:9685461863"
+                isValid = false
+            }
+            if (!validateEmail(email)) {
+                emailError.innerText = "Please enter a valid email, example: user@email.com";
+                isValid = false;
+            }
+            if (!validateName(name)) {
+                nameError.innerText = "Please enter a valid name"
+                isValid = false;
+            }
+            if (!validatePassword(password)) {
+                passwordError.innerText = "Password must be at least 8 characters long, use caps/small and symbols";
+                isValid = false;
+            }
+
+            if (isValid) {
+                showOtpPopup();
+            }
+        });
+        function validateName(name) {
+            return name.length >= 4
+        }
+        function validatePhone(phone) {
+            var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+            return phoneRegex.test(phone)
+        }
+        function validateEmail(email) {
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8 && /\d/.test(password);
+        }
+
+        function showOtpPopup() {
+            const name = document.querySelector('input[name="name"]').value;
+            const phone = document.querySelector('input[name="phone"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+            const checkbox = document.querySelector('input[name="checkbox"]').checked;
+
+
+            document.querySelector('.signup-container').style.display = 'none';
+            document.getElementById('signup-otp-container').style.display = 'flex';
+
+
+            fetch('/signuppost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, phone, password, checkbox })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => { throw new Error(data.message); });
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                    startOtpTimer();
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                    if (error.message === 'User already exists') {
+                        Swal.fire({
+                            title: 'User already exists',
+                            text: 'You already have an account. Please login.',
+                            icon: 'warning',
+                            confirmButtonText: 'Login'
+                        }).then(() => {
+                            window.location.href = '/login';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'There was an error creating your account. Please try again later.',
+                            icon: 'error'
+                        });
+                    }
+                });
+        }
+
+        document.getElementById('validate-otp-button').addEventListener('click', function () {
+            let otpInputs = document.querySelectorAll('.signup-otp-input');
+            let enteredOtp = '';
+            otpInputs.forEach(input => {
+                enteredOtp += input.value;
+            });
+
+            const name = document.querySelector('input[name="name"]').value;
+            const phone = document.querySelector('input[name="phone"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+            const checkbox = document.querySelector('input[name="checkbox"]').checked;
+
+            fetch('/validate-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ enteredOtp, name, email, phone, password, checkbox })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'User registered successfully') {
+
+                        window.location.href = '/login';
+                    } else {
+                        Swal.fire("Invalid OTP or User Already Exist!");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        function startOtpTimer() {
+            let timer = 60;
+            const otpTimerElement = document.querySelector('.signup-otp-time');
+            const resendLink = document.getElementById('resend-otp-link');
+
+            const interval = setInterval(() => {
+                if (timer > 0) {
+                    timer--;
+                    const minutes = Math.floor(timer / 60);
+                    const seconds = timer % 60;
+                    otpTimerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                } else {
+                    clearInterval(interval);
+                    otpTimerElement.style.display = 'none';
+                    resendLink.style.pointerEvents = 'auto';
+                    resendLink.style.color = '#007BFF'; // Change to active link color
+                }
+            }, 1000);
+        }
+
+        document.getElementById('resend-otp-link').addEventListener('click', function (event) {
+            event.preventDefault();
+            const email = document.querySelector('input[name="email"]').value;
+            fetch('/resend-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    otpTimerElement.style.display = 'block'; // Ensure the timer is visible when resending
+                    startOtpTimer();
+                    document.getElementById('resend-otp-link').style.pointerEvents = 'none';
+                    document.getElementById('resend-otp-link').style.color = 'grey';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+    </script>
+    <%- include('footer') %>

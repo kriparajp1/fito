@@ -1,0 +1,78 @@
+<style>
+    .category-menu-item.active {
+        background-color: #f60;
+        color: #fff;
+    }
+
+    .category-menu-item:hover {
+        background-color: #f60;
+        color: #fff;
+    }
+</style>
+
+<nav class="category-sidebar">
+    <ul class="category-menu">
+        <a href="/admin/adminDashBoard">
+            <li class="category-menu-item <%= menu === 'dashboard' ? 'active' : '' %>">
+                <img src="/images/dashboard.png" alt="">
+                Dashboard
+            </li>
+        </a>
+        <a href="/admin/productManagement">
+            <li class="category-menu-item <%= menu === 'products' ? 'active' : '' %>">
+                <img src="/images/box.png" alt="Products">
+                Products
+            </li>
+        </a>
+        <a href="/admin/adminCustomer">
+            <li class="category-menu-item <%= menu === 'customers' ? 'active' : '' %>">
+                <img src="/images/group.png" alt="Customers">
+                Customers
+            </li>
+        </a>
+        <a href="/admin/orders">
+            <li class="category-menu-item <%= menu === 'orders' ? 'active' : '' %>">
+                <img src="/images/shopping-bag.png" alt="Orders">
+                Orders
+            </li>
+        </a>
+        <a href="/admin/sales-report">
+            <li class="category-menu-item <%= menu === 'salesreport' ? 'active' : '' %>">
+                <img src="https://img.icons8.com/?size=100&id=70640&format=png&color=FFFFFF" alt="Orders">
+                salesReport
+            </li>
+        </a>
+        <a href="/admin/category">
+            <li class="category-menu-item <%= menu === 'categories' ? 'active' : '' %>">
+                <img src="/images/notes.png" alt="Categories">
+                Categories
+            </li>
+        </a>
+        <a href="/admin/coupons">
+            <li class="category-menu-item <%= menu === 'coupons' ? 'active' : '' %>">
+                <img src="/images/voucher.png" alt="Coupons">
+                Coupons
+            </li>
+        </a>
+        <a href="/admin/offer">
+            <li class="category-menu-item <%= menu === 'offer' ? 'active' : '' %>">
+                <img src="https://img.icons8.com/?size=100&id=uyTcykvGtPTc&format=png&color=FFFFFF" alt="Orders">
+                Offers
+            </li>
+        </a>
+        <li class="category-menu-item <%= menu === 'smallInfo' ? 'active' : '' %>">
+            <img src="https://img.icons8.com/?size=100&id=2800&format=png&color=FFFFFF" alt="Banner">
+            Small footer Info
+        </li>
+        <li class="category-menu-item <%= menu === 'banner' ? 'active' : '' %>">
+            <img src="/images/ribbon-banner.png" alt="Banner">
+            Banner
+        </li>
+        <a href="/admin/logout">
+            <li class="category-menu-item">
+                <img src="/images/log-out.png" alt="Logout">
+                Logout
+            </li>
+        </a>
+    </ul>
+</nav>

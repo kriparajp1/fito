@@ -1,0 +1,84 @@
+<%- include("adminheader") %>
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <main class="category-main">
+                <div class="addcoupons-container" style="padding-bottom: 4rem;">
+                    <div class="addcoupons-header">
+                        <h1>Add - Coupon</h1>
+                    </div>
+                    <div class="addcoupons-content">
+                        <form class="addcoupons-form" id="coupon" action="/admin/coupons/add" method="POST">
+                            <label for="couponName" class="addcoupons-label">Coupon Name*</label>
+                            <input type="text" id="couponName" name="name" class="addcoupons-input" required>
+                            <span id="nameError" class="error"></span><br>
+                        
+                            <label for="value" class="addcoupons-label">Value*</label>
+                            <input type="number" id="value" name="value" class="addcoupons-input" min="1" required>
+                            <span id="numberError" class="error"></span><br>
+                        
+                            <label for="expiryDate" class="addcoupons-label">Expiry Date*</label>
+                            <input type="date" id="expiryDate" name="expiryDate" class="addcoupons-input" required>
+                            <span id="dateError" class="error"></span><br>
+                        
+                            <button type="submit" class="addcoupons-button">Add New Coupon</button>
+                        </form>
+                        
+                        <div class="addcoupons-image">
+                            <img src="https://cdnl.iconscout.com/lottie/premium/thumb/coupons-6928628-5650291.gif"
+                                alt="Coupon"> <!-- Replace with actual path -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+    <script>
+        document.getElementById("coupon").addEventListener("submit", function (event) {
+            event.preventDefault();
+        
+            document.getElementById("numberError").innerText = "";
+            document.getElementById("nameError").innerText = "";
+            document.getElementById("dateError").innerText = "";
+        
+            var number = document.getElementById("value").value;
+            var numberError = document.getElementById("numberError");
+        
+            var name = document.getElementById("couponName").value;
+            var nameError = document.getElementById("nameError");
+        
+            var expiryDate = document.getElementById("expiryDate").value;
+            var dateError = document.getElementById("dateError");
+        
+            var isValid = true;
+        
+            if (!validateName(name)) {
+                nameError.innerText = "Enter a valid name";
+                isValid = false;
+            }
+            if (!validateNumber(number)) {
+                numberError.innerText = "Do not enter a negative value";
+                isValid = false;
+            }
+            if (!validateDate(expiryDate)) {
+                dateError.innerText = "Expiry date cannot be in the past";
+                isValid = false;
+            }
+            if (isValid) {
+                document.getElementById("coupon").submit();
+            }
+        });
+        
+        function validateNumber(number) {
+            return number > 0;
+        }
+        
+        function validateName(name) {
+            return name.trim().length > 0;
+        }
+        
+        function validateDate(date) {
+            var today = new Date().toISOString().split("T")[0];
+            return date >= today;
+        }
+        
+    </script>
+    <%- include("adminfooter") %>

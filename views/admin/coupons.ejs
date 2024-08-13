@@ -1,0 +1,91 @@
+<%- include("adminheader") %>
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <main class="category-main">
+                <div class="coupons-container">
+                    <header class="coupons-header">
+                        <h1>Coupons</h1>
+                        <div class="coupons-search">
+                            <input type="text" class="coupons-search-input" placeholder="Search">
+                            <button class="coupons-search-button">
+                                <img src="search-icon.png" alt="Search"> <!-- Replace with actual path -->
+                            </button>
+                        </div>
+                    </header>
+                    <div class="coupons-table">
+                        <div class="coupons-row coupons-header-row">
+                            <div class="coupons-cell coupons-header-cell">Coupon Code</div>
+                            <div class="coupons-cell coupons-header-cell">Value</div>
+                            <div class="coupons-cell coupons-header-cell">Expiry Date</div>
+                            <div class="coupons-cell coupons-header-cell">Edit</div>
+                        </div>
+                        <% coupons.forEach(coupon=> { %>
+                            <div class="coupons-row">
+                                <div class="coupons-cell">
+                                    <%= coupon.name %>
+                                </div>
+                                <div class="coupons-cell">
+                                    <%= coupon.value %>% off
+                                </div>
+                                <div class="coupons-cell">
+                                    <%= coupon.expiryDate.toISOString().split('T')[0]; %>
+                                </div>
+                                <div class="coupons-cell">
+                                    <button class="coupons-edit-button"
+                                        onclick="window.location.href='/admin/coupons/edit/<%= coupon._id %>'">Edit</button>
+                                    <button class="coupons-remove-button"
+                                        onclick="deleteCoupon('<%= coupon._id %>')">Remove</button>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <div class="coupons-add-button-container">
+                        <button class="coupons-add-button" onclick="window.location.href='/admin/addCoupons'">Add New
+                            Coupon</button>
+                    </div>
+                </div>
+            </main>
+    </div>
+    <%- include("adminfooter") %>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            function deleteCoupon(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/admin/coupons/delete/${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Your coupon has been deleted.',
+                                        'success'
+                                    ).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'There was an error deleting your coupon.',
+                                        'error'
+                                    );
+                                }
+                            });
+                    }
+                });
+            }
+        </script>

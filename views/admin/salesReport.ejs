@@ -1,0 +1,94 @@
+<%- include("adminheader") %>
+    <div class="category-container">
+        <%- include("adminNav") %>
+            <div class="salesreport-container" style="padding-bottom: 4rem;">
+                <h1 class="salesreport-title">Sales Report</h1>
+
+                <div class="salesreport-filters">
+                    <form action="/admin/sales-report" method="get" class="form-inline">
+                        <select class="salesreport-select" id="range-select" name="range">
+                            <option value="range">Select range</option>
+                            <option value="daily" <%=range==='daily' ? 'selected' : '' %>>Daily</option>
+                            <option value="weekly" <%=range==='weekly' ? 'selected' : '' %>>Weekly</option>
+                            <option value="monthly" <%=range==='monthly' ? 'selected' : '' %>>Monthly</option>
+                            <option value="yearly" <%=range==='yearly' ? 'selected' : '' %>>Yearly</option>
+                        </select>
+                        <input type="date" class="salesreport-date" name="start" value="<%= startDate %>"
+                            class="form-control">
+                        <input type="date" class="salesreport-date" name="end" value="<%= endDate %>"
+                            class="form-control">
+                        <button class="salesreport-button" id="filter-button">Filter</button>
+                    </form>
+                    <a href="/admin/sales-reports/<%= queryString %>" class="btn btn-success mr-2" target="_blank">
+                        <button class="salesreport-button" id="pdf-button">Generate PDF</button>
+                    </a>
+
+                </div>
+
+                <div class="salesreport-summary">
+                    <div class="salesreport-summary-item">Total Sales<br><span class="salesreport-summary-value"
+                            id="total-sales">₹<%= totalSales.toFixed(2) %></span></div>
+                    <div class="salesreport-summary-item">Total Coupons Discount<br><span
+                            class="salesreport-summary-value" id="total-coupons">₹<%= totalCoupons.toFixed(2) %></span>
+                    </div>
+                    <div class="salesreport-summary-item">Total Offer Discount<br><span
+                            class="salesreport-summary-value" id="total-offers">₹<%= totalOfferDiscount.toFixed(2) %>
+                                </span></div>
+                    <div class="salesreport-summary-item">Total Orders<br><span class="salesreport-summary-value"
+                            id="total-orders">
+                            <%= totalSalesCount %>
+                        </span></div>
+                    <div class="salesreport-summary-item">Total Cancelled/Returned Orders<br><span
+                            class="salesreport-summary-value" id="total-cancelled">
+                            <%= totalCanceledReturnedCount %>
+                        </span></div>
+                </div>
+
+                <table class="salesreport-table">
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>User</th>
+                            <th>Products</th>
+                            <th>Total Amount</th>
+                            <th>Final Amount</th>
+                            <th>Payment</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orders.forEach((order, index)=> { %>
+                            <tr>
+                                <td>
+                                    <%= (index + 1) %>
+                                </td>
+                                <td>
+                                    <%= order.user_id.name %>
+                                </td>
+                                <td>
+                                    <div class="ordered-items">
+                                        <% order.orderedItems.forEach(item=> { %>
+                                            <div class="item">
+                                                <%= item.product_name %> *<%= item.quantity %>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                </td>
+                                <td>₹<%= order.totalAmount.toFixed(2) %>
+                                </td>
+                                <td>₹<%= order.finalAmount.toFixed(2) %>
+                                </td>
+                                <td>
+                                    <%= order.paymentMethod %>
+                                </td>
+                                <td>
+                                    <%= new Date(order.orderDate).toLocaleDateString() %><br>
+                                        <%= new Date(order.orderDate).toLocaleTimeString() %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+    </div>
+    <%- include("adminfooter") %>

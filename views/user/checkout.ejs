@@ -1,0 +1,184 @@
+<%- include("header") %>
+    <form action="/place-order" method="post">
+        <div class="checkout-container">
+            <div class="checkout-billing">
+                <h2>Billing details</h2>
+                <div class="check-out-container">
+                    <div class="check-out-order-summary">
+                        <h2>Your Order</h2>
+                        <div class="check-out-order-item">
+                            <div class="check-out-product-info">
+                                <input type="hidden" name="orderedItems[0][productId]" value="<%= product._id %>">
+                                <input type="hidden" name="orderedItems[0][product_name]"
+                                    value="<%= product.product_name %>">
+                                <input type="hidden" name="orderedItems[0][product_images]"
+                                    value="<%= product.product_image[0] %>">
+                                <input type="hidden" name="orderedItems[0][price]" value="<%= product.product_price %>">
+                                <input type="hidden" name="orderedItems[0][quantity]" value="1">
+                                <h3>
+                                    <%= product.product_name %>
+                                </h3>
+                                <img src="/image/<%=product.product_image[0]%>" alt="Product Image">
+                            </div>
+                            <div class="check-out-product-details">
+                                <p>Qty : 1</p>
+                                <p>Price : <s>₹ <%= product.product_price %></s></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="check-out-address-selection">
+                        <h2>Choose Address</h2>
+                        <div class="check-out-address-dropdown">
+                            <select name="address">
+                                <% addresses.forEach(function(address) { %>
+                                    <option value="<%= address._id %>">
+                                        <%= address.address %>, <%= address.city %>, <%= address.state %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <button type="button" class="check-out-add-address" onclick="openModal()">Add address</button>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout-summary">
+                <h2>Your order</h2>
+                <div class="checkout-order-summary">
+                    <p>No of Product<span>1</span></p>
+                    <p>Subtotal<span>₹ <%= product.product_price %></span></p>
+                    <p>Discount<span>₹ <%= product.product_price %></span></p>
+                    <p>Shipping<span>Free</span></p>
+                    <p>Total<span>₹ <%= product.product_price %></span></p>
+                    <div class="checkout-coupon">
+                        <input type="text" placeholder="Enter the Coupon Code" name="couponCode">
+                        <button type="button">Apply</button>
+                    </div>
+                    <p>Payable Amount<span>₹ <%= product.product_price %></span></p>
+                </div>
+                <div class="checkout-payment-methods">
+                    <label><input type="radio" name="paymentMethod" value="COD" checked> Cash on delivery</label>
+                    <label><input type="radio" name="paymentMethod" value="Wallet"> Wallet</label>
+                    <label><input type="radio" name="paymentMethod" value="RazorPay"> Razorpay</label>
+                </div>
+                <button type="submit" class="checkout-place-order">Place Order</button>
+            </div>
+        </div>
+    </form>
+    <!-- Address Modal -->
+    <div id="addressModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="checkout-billing" style="border-radius: 1rem; border: white; border-style: groove;">
+                <h2>Add Address</h2>
+                <form id="addAddressForm" action="/add-address" method="post">
+                    <div class="checkout-form-group">
+                        <label for="firstName">Name *</label>
+                        <input type="text" id="firstName" name="name" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <label for="address">address *</label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <label for="city">district *</label>
+                        <input type="text" id="city" name="district" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <label for="state">State *</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <label for="pincode">Pincode *</label>
+                        <input type="text" id="pincode" name="pincode" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="text" id="phone" name="mobile" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <label for="email">Landmark *</label>
+                        <input type="email" id="email" name="landmark" required>
+                    </div>
+                    <div class="checkout-form-group">
+                        <input type="checkbox" id="saveInfo" name="saveInfo">
+                        <label for="saveInfo">Save this information for faster checkout next time</label>
+                    </div>
+                    <button type="submit">Save Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include("footer") %>
+
+        <script>
+            // Get the modal
+            var modal = document.getElementById("addressModal");
+
+            // Function to open the modal
+            function openModal() {
+                modal.style.display = "block";
+            }
+
+            // Function to close the modal
+            function closeModal() {
+                modal.style.display = "none";
+            }
+
+            // Close the modal if the user clicks outside of the modal
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+
+        <style>
+            /* Modal styles */
+            .modal {
+                display: none;
+                /* Hidden by default */
+                position: fixed;
+                /* Stay in place */
+                z-index: 1;
+                /* Sit on top */
+                left: 0;
+                top: 0;
+                width: 100%;
+                /* Full width */
+                height: 100%;
+                /* Full height */
+                overflow: auto;
+                /* Enable scroll if needed */
+                background-color: rgb(0, 0, 0);
+                /* Fallback color */
+                background-color: rgba(0, 0, 0, 0.4);
+                /* Black w/ opacity */
+            }
+
+            /* Modal Content/Box */
+            .modal-content {
+                margin: 15% auto;
+                /* 15% from the top and centered */
+                padding: 20px;
+                width: 70%;
+                /* Could be more or less, depending on screen size */
+            }
+
+            /* The Close Button */
+            .close {
+                color: #ff4500;
+                float: none;
+                position: absolute;
+                translate: 104% 28%;
+                font-size: 29px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>

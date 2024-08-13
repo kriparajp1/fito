@@ -1,0 +1,86 @@
+<%- include("adminheader") %>
+    <!-- add category -->
+    <div class="admin-new-category-container">
+        <%- include("adminNav") %>
+            <% if (categoryStatus==="new" ) { %>
+                <main class="admin-new-category-main">
+                    <section class="admin-new-category-form-container">
+                        <h2>New Category</h2>
+                        <form id="categoryForm" action="/admin/addCategory" method="post"
+                            class="admin-new-category-form">
+                            <label for="categoryName">Category Name*</label>
+                            <input type="text" id="categoryName" name="categoryName" required>
+                            <span id="nameError" class="error"></span><br>
+
+                            <label for="categoryDescription">Description*</label>
+                            <textarea id="categoryDescription" name="description" required></textarea>
+
+                            <button type="submit">Add Category</button>
+                        </form>
+                        <div id="alert" style="display: none; color: red;">Category name already exists</div>
+                    </section>
+                </main>
+                <% } else { %>
+                    <main class="admin-new-category-main" style="padding-bottom: 4rem;">
+                        <section class="admin-new-category-form-container">
+                            <h2>Update Category</h2>
+                            <form id="categoryForm" action="/admin/editCategory/<%= category._id %>" method="post"
+                                class="admin-new-category-form">
+                                <label for="categoryName">Category Name*</label>
+                                <input type="text" id="categoryName" name="categoryName" required
+                                    value="<%= category.categoryName %>">
+                                <span id="nameError" class="error"></span><br>
+
+                                <label for="categoryDescription">Description*</label>
+                                <textarea id="categoryDescription" name="description"
+                                    required><%= category.description %></textarea>
+
+                                <button type="submit">Update Category</button>
+                            </form>
+                            <div id="alert" style="display: none; color: red;">Category name already exists</div>
+                        </section>
+                    </main>
+                    <% } %>
+    </div>
+    <%- include("adminfooter") %>
+
+        <script>
+            document.getElementById('categoryForm').addEventListener('submit', async function (event) {
+                event.preventDefault();
+                document.getElementById("nameError").innerText = ""
+                const categoryName = document.getElementById('categoryName').value;
+                const actionUrl = this.getAttribute('action');
+                const isUpdate = actionUrl.includes('/editCategory/');
+                const categoryId = isUpdate ? actionUrl.split('/editCategory/')[1] : null;
+                var nameError = document.getElementById("nameError")
+                var isValid = true;
+                if (!validateName(categoryName)) {
+                    nameError.innerText = "enter a valid name"
+                    isValid = false;
+                }
+
+
+
+                function validateName(categoryName) {
+                    var space = categoryName.split("").every((a, b) => a == " ") ? false : true
+                    return space
+                }
+
+                const response = await fetch(`/admin/checkCategoryExists?categoryName=${encodeURIComponent(categoryName)}`);
+                const data = await response.json();
+
+                if (data.exists) {
+                    if (isUpdate && data.categoryId === categoryId) {
+
+                        this.submit();
+                    } else {
+                        document.getElementById('alert').style.display = 'block';
+                    }
+                } else {
+                    if (isValid) {
+                        this.submit();
+                    }
+
+                }
+            });
+        </script>

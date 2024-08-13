@@ -1,0 +1,149 @@
+<%- include("header") %>
+    <div class="wishlist-container" style="margin: auto;">
+        <div class="wishlist-header">
+            <h1 class="wishlist-title">Wishlist (<%= wishlist.products.length %>)</h1>
+        </div>
+
+        <div class="wishlist-items">
+            <% if (wishlist.products.length> 0) { %>
+                <% wishlist.products.forEach(product=> { %>
+                    <div class="wishlist-item">
+                        <button class="wishlist-delete-button" style="translate: 953%; position: absolute;"
+                            data-product-id="<%= product.product._id %>">
+                            <img style="width:19px;"
+                                src="https://img.icons8.com/ios-filled/50/000000/delete-forever.png" alt="Delete">
+                        </button>
+                        <img src="/image/<%= product.product.product_image[0] %>"
+                            alt="<%= product.product.product_name %>" class="wishlist-item-image">
+                        <div class="wishlist-item-details">
+                            <h2 class="wishlist-item-title">
+                                <%= product.product.product_name %>
+                            </h2>
+                            <p class="wishlist-item-rating">★★★★★ (11)</p>
+                            <div class="wishlist-item-footer">
+                                <p class="wishlist-item-price">
+                                    <%= product.product.product_price %>
+                                </p>
+                                <button class="wishlist-cart-button"
+                                    onclick="addToCart('<%= product.product._id %>')">Add to cart</button>
+                                <a href="/productView/<%= product.product._id %>"><button
+                                        class="wishlist-buy-button">Buy Now</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                        <% } else { %>
+                            <p>No items in your wishlist.</p>
+                            <% } %>
+        </div>
+    </div>
+    <%- include("footer") %>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteButtons = document.querySelectorAll('.wishlist-delete-button');
+
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const productId = this.getAttribute('data-product-id');
+
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                deleteWishlistItem(productId);
+                            }
+                        });
+                    });
+                });
+            });
+
+            function deleteWishlistItem(productId) {
+                fetch('/wishlist/delete', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Wishlist item deleted successfully') {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your wishlist item has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete wishlist item.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the wishlist item.',
+                            'error'
+                        );
+                    });
+            }
+
+            function addToCart(productId) {
+                fetch('/add-to-cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                }).then((res) => res.json())
+                    .then((data) => {
+                        if (data.status === 'exists') {
+                            Swal.fire({
+                                imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/cart-10295071-8402132.gif',
+                                imageWidth: 150,
+                                title: "Products already exist in the cart",
+                                timer: 2000,
+                                timerProgressBar: true,
+                            });
+                        } else if (data.status === 'added') {
+                            Swal.fire({
+                                position: "center",
+                                imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/cart-items-added-4677978-3901195.gif',
+                                imageWidth: 100,
+                                title: "Product added to Cart Successfully",
+                                showConfirmButton: true,
+                            }).then(() => {
+                                deleteWishlistItem(productId); // Delete the item from the wishlist after adding to cart
+                            });
+                        } else {
+                            Swal.fire({
+                                position: "center",
+                                imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/error-6464472-5372883.gif',
+                                imageWidth: 100,
+                                title: "Failed to add Product to Cart",
+                                showConfirmButton: true,
+                            });
+                        }
+                    }).catch((err) => {
+                        console.error('Error adding product to cart:', err);
+                        Swal.fire({
+                            position: "center",
+                            imageUrl: 'https://cdnl.iconscout.com/lottie/premium/thumb/error-6464472-5372883.gif',
+                            imageWidth: 100,
+                            title: "Failed to add Product to Cart",
+                            showConfirmButton: true,
+                        });
+                    });
+            }
+        </script>

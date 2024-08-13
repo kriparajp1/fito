@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #f1f1f1;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .orderMail-container,
+        .orderMail1-container,
+        .orderMail2-container,
+        .orderMail3-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: auto;
+        }
+
+        .orderMail-header {
+            text-align: center;
+            background-color: #004f4f;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .orderMail-header h1,
+        .orderMail1-header h2,
+        .orderMail2-section h2,
+        .orderMail1-section h2 {
+            margin: 0;
+            color: #fff;
+        }
+
+        .orderMail-orderNumber {
+            background-color: #d94a38;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .orderMail-summaryItem,
+        .orderMail2-summaryItem,
+        .orderMail2-summaryTotal {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .orderMail1-details,
+        .orderMail1-shippingDetails,
+        .orderMail1-estimatedDetails {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .orderMail1-detailItem {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+
+        .orderMail1-detailItem p,
+        .orderMail1-shippingDetails div p {
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        .orderMail1-section,
+        .orderMail2-section {
+            margin-bottom: 20px;
+        }
+
+        .orderMail1-trackButton {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #d94a38;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .orderMail1-trackButton:hover {
+            background-color: #c43f2b;
+        }
+
+        .orderMail3-services {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .orderMail3-service {
+            width: 48%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .orderMail3-service img {
+            width: 50px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .orderMail3-details {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .orderMail3-openingHours,
+        .orderMail3-contactUs {
+            width: 48%;
+            margin-bottom: 20px;
+        }
+
+        .orderMail3-socialMedia {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .orderMail3-socialMedia a img {
+            width: 30px;
+            height: auto;
+        }
+
+        @media (max-width: 600px) {
+
+            .orderMail1-detailItem,
+            .orderMail1-shippingDetails div,
+            .orderMail3-openingHours,
+            .orderMail3-contactUs {
+                width: 100%;
+            }
+
+            .orderMail3-service {
+                width: 100%;
+            }
+
+            .orderMail1-details,
+            .orderMail1-estimatedDetails {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        p {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="orderMail-container">
+            <div class="orderMail-header">
+                <img style="width: 6rem;" src="https://i.postimg.cc/85Y1BCBk/Screenshot-2024-07-17-120301.png" alt="">
+                <h1>Thanks For Your Order!</h1>
+                <p>Thank you for your recent order. We are pleased to confirm that we have received your order and it is
+                    currently being processed.</p>
+                <div class="orderMail-orderNumber">
+                    <p>Order Number: 123456789</p>
+                </div>
+            </div>
+        </div>
+        <div class="orderMail1-container">
+            <div class="orderMail1-header">
+                <h2>Your Details</h2>
+            </div>
+            <div class="orderMail1-details">
+                <div class="orderMail1-detailItem">
+                    <p><strong>Name</strong></p>
+                    <p>Agatha Fletcher</p>
+                </div>
+                <div class="orderMail1-detailItem">
+                    <p><strong>Address</strong></p>
+                    <p>7181 Gentle Butterfly</p>
+                </div>
+                <div class="orderMail1-detailItem">
+                    <p><strong>Mobile</strong></p>
+                    <p>(000)-123-456</p>
+                </div>
+                <div class="orderMail1-detailItem">
+                    <p><strong>Order number</strong></p>
+                    <p>123456789</p>
+                </div>
+                <div class="orderMail1-detailItem">
+                    <p><strong>Email</strong></p>
+                    <p>agatha_fletcher@email</p>
+                </div>
+                <div class="orderMail1-detailItem">
+                    <p><strong>Order date</strong></p>
+                    <p>23.05.2023</p>
+                </div>
+            </div>
+            <div class="orderMail1-section">
+                <h2>Items that ship</h2>
+                <div class="orderMail1-shippingDetails">
+                    <div>
+                        <p><strong>Shipping to:</strong></p>
+                        <p>Agatha Fletcher<br>
+                            7181 Gentle Butterfly Orchard,<br>
+                            Dynamite, Nebraska, 68669-7444</p>
+                    </div>
+                    <div>
+                        <p><strong>Billing to:</strong></p>
+                        <p>Agatha Fletcher<br>
+                            7181 Gentle Butterfly Orchard,<br>
+                            Dynamite, Nebraska, 68669-7444</p>
+                    </div>
+                </div>
+            </div>
+            <div class="orderMail1-section">
+                <h2>Estimated date to delivery</h2>
+                <div class="orderMail1-estimatedDetails">
+                    <div>
+                        <p><strong>Order number</strong></p>
+                        <p>123456789</p>
+                    </div>
+                    <div>
+                        <p><strong>Order date</strong></p>
+                        <p>23.05.2023</p>
+                    </div>
+                    <div>
+                        <p><strong>Expected day of delivery</strong></p>
+                        <p>01.06.2023</p>
+                    </div>
+                </div>
+                <p>Use this number to track your package:</p>
+                <p class="orderMail1-trackingNumber">123456789</p>
+                <button class="orderMail1-trackButton">Track My Order</button>
+            </div>
+        </div>
+        <div class="orderMail2-container">
+            <div class="orderMail2-section">
+                <h2>Payment Summary</h2>
+                <div class="orderMail2-summary">
+                    <div class="orderMail2-summaryItem">
+                        <p>Subtotal</p>
+                        <p>₹2200.00</p>
+                    </div>
+                    <div class="orderMail2-summaryItem">
+                        <p>Discount</p>
+                        <p>₹00.00</p>
+                    </div>
+                    <div class="orderMail2-summaryItem">
+                        <p>Shipping</p>
+                        <p>Free</p>
+                    </div>
+                    <div class="orderMail2-summaryItem">
+                        <p>Tax</p>
+                        <p>₹0</p>
+                    </div>
+                    <div class="orderMail2-summaryTotal">
+                        <p>Total</p>
+                        <p>₹2200.00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="orderMail2-section">
+                <h2>Payment Method</h2>
+                <div class="orderMail2-paymentMethod">
+                    <p>Payment type</p>
+                    <div class="orderMail2-paymentType">
+                        <!-- <img src="mastercard-logo.png" alt="Mastercard">
+                    <p>Mastercard</p> -->
+                    </div>
+                </div>
+            </div>
+            <div class="orderMail3-container" style="padding:0px">
+                <div class="orderMail3-services">
+                    <div class="orderMail3-service">
+                        <img src="https://cdnl.iconscout.com/lottie/premium/thumb/24-hour-support-3575941-2997658.gif"
+                            alt="Technical support 24/7">
+                        <p>Technical support 24/7</p>
+                    </div>
+                    <div class="orderMail3-service">
+                        <img src="https://cdnl.iconscout.com/lottie/premium/thumb/emi-5118511-4282524.gif"
+                            alt="Payment in installments">
+                        <p>Payment in installments</p>
+                    </div>
+                    <div class="orderMail3-service">
+                        <img src="https://cdnl.iconscout.com/lottie/premium/thumb/best-price-10794185-8755826.gif"
+                            alt="We have the best prices">
+                        <p>We have the best prices</p>
+                    </div>
+                    <div class="orderMail3-service">
+                        <img src="https://cdnl.iconscout.com/lottie/premium/thumb/delivery-4148236-3434735.gif"
+                            alt="Delivery around the world">
+                        <p>Delivery around the world</p>
+                    </div>
+                </div>
+                <div class="orderMail3-details">
+                    <div class="orderMail3-openingHours">
+                        <h3>OPENING HOURS</h3>
+                        <p>Mon - Fri: 8AM - 10PM</p>
+                        <p>Sat: 9AM - 8PM</p>
+                        <p>Sun: Closed</p>
+                        <p>National Holidays: Closed</p>
+                    </div>
+                    <div class="orderMail3-contactUs">
+                        <h3>CONTACT US</h3>
+                        <p>+91 8848521648</p>
+                        <p>fito@gmail.com</p>
+                        <div class="orderMail3-socialMedia">
+                            <a href="#"><img src="https://img.icons8.com/?size=100&id=118467&format=png&color=FFFFFF"
+                                    alt="Facebook"></a>
+                            <a href="#"><img src="https://img.icons8.com/?size=100&id=60014&format=png&color=FFFFFF"
+                                    alt="Twitter"></a>
+                            <a href="#"><img src="https://img.icons8.com/?size=100&id=60014&format=png&color=FFFFFF"
+                                    alt="Instagram"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

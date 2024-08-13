@@ -1,0 +1,140 @@
+<%- include("header") %>
+
+    <!-- Order Status -->
+    <div class="userPanel-container">
+        <div class="userPanel-sidebar">
+            <h2>Manage My Account</h2>
+            <ul class="userPanel-menu">
+                <li class="userPanel-menuItem"><a href="/userPanel">My Profile</a></li>
+                <li class="userPanel-menuItem"><a href="/order-status">Order Status</a></li>
+                <li class="userPanel-menuItem userPanel-active"><a href="/uncompletedOrder">Uncompleted Orders</a></li>
+                <li class="userPanel-menuItem"><a href="#">Return Item</a></li>
+                <li class="userPanel-menuItem"><a href="/wallet">wallet</a></li>
+                <li class="userPanel-menuItem"><a href="#">My Wishlist</a></li>
+            </ul>
+            <button class="userPanel-logout">Logout</button>
+        </div>
+        <div class="orderstatus-container">
+            <h2>Uncompleted Orders</h2>
+            <% order.forEach(item=> { %>
+                <div class="orderstatus-card">
+                    <div class="orderstatus-item">
+                        <% item.orderedItems.forEach(orderedItem=> { %>
+                            <img src="/image/<%= orderedItem.product_images[0] %>"
+                                alt="<%= orderedItem.product_name %>">
+                            <div class="orderstatus-details">
+                                <h2>
+                                    <%= orderedItem.product_name %>
+                                </h2>
+                                <p>Quantity: <%= orderedItem.quantity %>
+                                </p>
+                                <p>Price: ₹ <%= orderedItem.price %>
+                                </p>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <div class="orderstatus-meta">
+                        <div class="orderstatus-info">
+                            <p>Order Placed<br>
+                                <%= new Date(item.orderDate).toLocaleDateString() %>
+                            </p>
+                            <p>Order ID<br>
+                                <%= item._id.toString().slice(-6) %>
+                            </p>
+                        </div>
+                        <div class="orderstatus-status">
+                            <p>Order Status<br><span class="orderstatus-confirmed">
+                                    <%= item.status %>
+                                </span></p>
+                            <p>Total Price<br>₹ <%= item.finalAmount %>
+                            </p>
+                        </div>
+                        <button class="orderstatus-return-button" data-order-id="<%= item._id %>">Retry Payment</button>
+                        <a href="/order/<%= item._id %>"><button
+                                style="width: 6rem; height: 2rem; background-color: aqua; border-radius: 9px; border-style: hidden;">view</button></a>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </div>
+    <%- include("footer") %>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            document.querySelectorAll('.orderstatus-return-button').forEach(button => {
+                button.addEventListener('click', async function (event) {
+                    const orderId = event.target.getAttribute('data-order-id');
+                    try {
+                        const URL = "/retry-razorpay";
+                        const res = await fetch(URL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ orderId })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            var options = {
+                                "key": "rzp_test_D1hrPYtWhv0psE",
+                                "amount": data.totalAmount * 100,
+                                "currency": "INR",
+                                "name": "FITO",
+                                "description": "Stay Fit for FITO",
+                                "order_id": data.orderId,
+                                "handler": function (response) {
+                                    fetch('/retry-payment', {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            orderId,
+                                            paymentId: response.razorpay_payment_id,
+                                            signature: response.razorpay_signature
+                                        })
+                                    }).then((res) => {
+                                        if (res.ok) {
+                                            window.location.href = '/thankyou';
+                                        }
+                                    }).catch((err) => {
+                                        console.log(err);
+                                    });
+                                },
+                                "prefill": {
+                                    "name": data.userName,
+                                    "email": data.userEmail,
+                                    "contact": data.userPhone
+                                },
+                                "notes": {
+                                    "address": "Razorpay Corporate Office"
+                                },
+                                "theme": {
+                                    "color": "#3399cc"
+                                }
+                            };
+                            var rzp1 = new Razorpay(options);
+                            rzp1.on('payment.failed', function (response) {
+                                fetch('/retry-payment-failed', {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({ orderId })
+                                }).then((res) => {
+                                    if (res.ok) {
+                                        window.location.href = '/failed';
+                                    }
+                                }).catch((err) => {
+                                    console.log(err);
+                                });
+                            });
+                            rzp1.open();
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+        </script>

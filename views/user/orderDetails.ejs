@@ -1,0 +1,209 @@
+<%- include("header") %>
+    <style>
+        .order-details-container {
+            flex: 1;
+            background-color: #1a1a1a;
+            padding: 20px;
+            margin-left: 20px;
+            border-radius: 5px;
+        }
+
+        .order-details-container h2 {
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .order-info,
+        .ordered-items {
+            margin-bottom: 20px;
+        }
+
+        .ordered-item {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .ordered-item img {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .item-details p {
+            margin: 5px 0;
+        }
+
+        .item-actions {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cancel-item-button,
+        .return-item-button {
+            background-color: #ffa500;
+            border: none;
+            padding: 10px;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .cancel-item-button:hover,
+        .return-item-button:hover {
+            background-color: #ff8c00;
+        }
+
+        .view-button {
+            background-color: #ffa500;
+            border: none;
+            padding: 10px;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .view-button:hover {
+            background-color: #ff8c00;
+        }
+
+        .order-info p,
+        .ordered-item p {
+            color: #999;
+        }
+    </style>
+    <!-- Order Status -->
+    <div class="userPanel-container">
+        <div class="userPanel-sidebar">
+            <h2>Manage My Account</h2>
+            <ul class="userPanel-menu">
+                <li class="userPanel-menuItem"><a href="/userPanel">My Profile</a></li>
+                <li class="userPanel-menuItem userPanel-active"><a href="/order-status">Order Status</a></li>
+                <li class="userPanel-menuItem"><a href="#">Order History</a></li>
+                <li class="userPanel-menuItem"><a href="#">Return Item</a></li>
+                <li class="userPanel-menuItem "><a href="/wallet">wallet</a></li>
+                <li class="userPanel-menuItem"><a href="#">My Wishlist</a></li>
+            </ul>
+            <button class="userPanel-logout">Logout</button>
+        </div>
+        <div class="order-details-container">
+            <h2>Order Details</h2>
+            <div class="order-info">
+                <p>Order ID: <%= order._id.toString().slice(-6) %>
+                </p>
+                <p>Order Date: <%= new Date(order.orderDate).toLocaleDateString() %>
+                </p>
+                <p>Total Amount: ₹ <%= order.finalAmount %>
+                </p>
+            </div>
+            <div class="ordered-items">
+                <% order.orderedItems.forEach(item=> { %>
+                    <div class="ordered-item">
+                        <img src="/image/<%= item.product_images[0] %>" alt="<%= item.product_name %>">
+                        <div class="item-details">
+                            <h2>
+                                <%= item.product_name %>
+                            </h2>
+                            <p>Quantity: <%= item.quantity %>
+                            </p>
+                            <p>Price: ₹ <%= item.price %>
+                            </p>
+                            <p>Status: <%= item.status %>
+                            </p>
+                        </div>
+                        <% if (item.status !=='Cancelled' && item.status !=='Returned' ) { %>
+                            <div class="item-actions">
+                                <% if (item.status==='Delivered' ) { %>
+                                    <button class="return-item-button" data-item-id="<%= item._id %>">Return</button>
+                                    <% } else { %>
+                                        <button class="cancel-item-button"
+                                            data-item-id="<%= item._id %>">Cancel</button>
+                                        <% } %>
+                            </div>
+                            <% } %>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <%- include("footer") %>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const cancelButtons = document.querySelectorAll('.cancel-item-button');
+                const returnButtons = document.querySelectorAll('.return-item-button');
+
+                cancelButtons.forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const itemId = event.target.getAttribute('data-item-id');
+                        const confirmCancel = confirm('Are you sure you want to cancel this item?');
+                        if (!confirmCancel) {
+                            return;
+                        }
+                        try {
+                            const response = await fetch('/cancel-item', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ itemId }),
+                            });
+                            const data = await response.json();
+                            if (data.status === 'cancelled') {
+                                alert('Item cancelled successfully.');
+                                location.reload();
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Error cancelling item:', error);
+                            alert('Failed to cancel item. Please try again later.');
+                        }
+                    });
+                });
+
+                returnButtons.forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const itemId = event.target.getAttribute('data-item-id');
+                        const confirmReturn = confirm('Are you sure you want to return this item?');
+                        if (!confirmReturn) {
+                            return;
+                        }
+                        try {
+                            const response = await fetch('/return-item', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ itemId }),
+                            });
+                            const data = await response.json();
+                            if (data.status === 'returned') {
+                                alert('Item returned successfully.');
+                                location.reload();
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Error returning item:', error);
+                            alert('Failed to return item. Please try again later.');
+                        }
+                    });
+                });
+            });
+        </script>
