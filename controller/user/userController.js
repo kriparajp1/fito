@@ -172,6 +172,13 @@ const userLogout = (req, res) => {
     res.redirect("/login");
   });
 };
+const erroro=(req,res)=>{
+  try {
+    res.render("user/error")
+  } catch (error) {
+    console.log(error)
+  }
+}
 module.exports = {
   landingpage,
   login,
@@ -180,4 +187,5 @@ module.exports = {
   home,
   getProductView,
   userLogout,
+  erroro
 };
