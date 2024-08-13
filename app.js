@@ -10,7 +10,7 @@ const passport = require("passport");
 const authRoutes = require("./routes/authRoute");
 require("./controller/user/googleAuth");
 
-const port = 3000;
+const port = 3003;
 const oneday = 1000 * 60 * 60 * 24;
 
 // middleware
