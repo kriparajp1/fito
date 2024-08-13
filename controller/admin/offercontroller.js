@@ -10,7 +10,7 @@ const offerGet = async (req, res) => {
     console.error("Error fetching offers:", error);
     res.status(500).send("Server error");
   }
-};
+}; 
 
 const addOffer = (req, res) => {
   try {
