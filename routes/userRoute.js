@@ -126,6 +126,6 @@ route.post(
   wishCount,
   uncompletedOrder.retryPaymentPost
 );
-route.all("*",usercontroller.erroro)
+// route.all("*",usercontroller.erroro)
 
 module.exports = route;
