@@ -7,7 +7,7 @@ passport.use(
     {
       clientID:process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "https://www.fitomart.shop/auth/google/callback",
     },
     async (request, accessToken, refreshToken, profile, done) => {
       try {
