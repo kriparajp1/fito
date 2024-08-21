@@ -77,40 +77,44 @@ adminRoute.post("/listProduct", isAdmin, productController.listProduct);
 
 // order management
 
-adminRoute.get("/orders",isAdmin, OrderManagement.getOrderManagement);
-adminRoute.post("/orders/:orderId/status",isAdmin, OrderManagement.postOrderManagement);
+adminRoute.get("/orders", isAdmin, OrderManagement.getOrderManagement);
+adminRoute.post(
+  "/orders/:orderId/status",
+  isAdmin,
+  OrderManagement.postOrderManagement
+);
 
 // salesReport
 
-adminRoute.get("/sales-report",isAdmin, saleReport.getSalesReports);
+adminRoute.get("/sales-report", isAdmin, saleReport.getSalesReports);
 // adminRoute.get("/sales-reports/pdf",saleReport.saleReport)
-adminRoute.get("/sales-reports",isAdmin, saleReport.generatePDFReport);
+adminRoute.get("/sales-reports", isAdmin, saleReport.generatePDFReport);
 
 // coupons
-adminRoute.get("/coupons",isAdmin, coupons.getCoupons);
-adminRoute.get("/addCoupons",isAdmin, coupons.getAddCoupons);
-adminRoute.post("/coupons/add",isAdmin, coupons.postAddCoupon);
-adminRoute.get("/coupons/edit/:id",isAdmin, coupons.getEditCoupon);
-adminRoute.post("/coupons/edit/:id", isAdmin,coupons.postEditCoupon);
-adminRoute.post("/coupons/delete/:id", isAdmin,coupons.deleteCoupon);
+adminRoute.get("/coupons", isAdmin, coupons.getCoupons);
+adminRoute.get("/addCoupons", isAdmin, coupons.getAddCoupons);
+adminRoute.post("/coupons/add", isAdmin, coupons.postAddCoupon);
+adminRoute.get("/coupons/edit/:id", isAdmin, coupons.getEditCoupon);
+adminRoute.post("/coupons/edit/:id", isAdmin, coupons.postEditCoupon);
+adminRoute.post("/coupons/delete/:id", isAdmin, coupons.deleteCoupon);
 
 // offer
 
-adminRoute.get("/offer",isAdmin, offer.offerGet);
-adminRoute.get("/addOffer",isAdmin, offer.addOffer);
-adminRoute.post("/addOffer",isAdmin, offer.addOfferPost);
-adminRoute.get("/editOffers/:id",isAdmin, offer.editOfferGet);
-adminRoute.get("/getReferences",isAdmin, offer.getReference);
-adminRoute.put("/editOffer/:offerId",isAdmin, offer.editOfferPut);
-adminRoute.delete("/removeOffer/:offerId",isAdmin, offer.removeOffer);
+adminRoute.get("/offer", isAdmin, offer.offerGet);
+adminRoute.get("/addOffer", isAdmin, offer.addOffer);
+adminRoute.post("/addOffer", isAdmin, offer.addOfferPost);
+adminRoute.get("/editOffers/:id", isAdmin, offer.editOfferGet);
+adminRoute.get("/getReferences", isAdmin, offer.getReference);
+adminRoute.put("/editOffer/:offerId", isAdmin, offer.editOfferPut);
+adminRoute.delete("/removeOffer/:offerId", isAdmin, offer.removeOffer);
 
 // small info page
 
-adminRoute.get("/infoPage",isAdmin, smallInfo.infoPageRender);
-adminRoute.get("/addInfo",isAdmin, smallInfo.renderAddInfo);
-adminRoute.post("/addInfo", isAdmin,smallInfo.addInfo);
+adminRoute.get("/infoPage", isAdmin, smallInfo.infoPageRender);
+adminRoute.get("/addInfo", isAdmin, smallInfo.renderAddInfo);
+adminRoute.post("/addInfo", isAdmin, smallInfo.addInfo);
 
 // chart
-adminRoute.get("/salesData", isAdmin,chart.getSalesData);
+adminRoute.get("/salesData", isAdmin, chart.getSalesData);
 
 module.exports = adminRoute;

@@ -86,43 +86,57 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet" />
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
 
             function previewImages(event) {
                 const files = event.target.files;
                 const previewContainer = document.getElementById('image-preview');
+                const maxImages = 3;
+              
+                if (files.length > maxImages) {
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'You can only upload up to 3 images',
+                    icon: 'error',
+                  });
+                  return;
+                }
+              
                 previewContainer.innerHTML = '';
-
+              
                 Array.from(files).forEach((file, index) => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imgDiv = document.createElement('div');
-                        imgDiv.className = 'image-preview-item';
-
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className = 'image-preview-image';
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.innerText = 'Delete';
-                        deleteBtn.className = 'image-delete-button';
-                        deleteBtn.onclick = function () {
-                            previewContainer.removeChild(imgDiv);
-                            const fileList = Array.from(files);
-                            fileList.splice(index, 1);
-                            event.target.files = new FileList(fileList);
-                        };
-
-                        imgDiv.appendChild(img);
-                        imgDiv.appendChild(deleteBtn);
-                        previewContainer.appendChild(imgDiv);
+                  const reader = new FileReader();
+                  reader.onload = function (e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'image-preview-item';
+              
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview-image';
+              
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.innerText = 'Delete';
+                    deleteBtn.className = 'image-delete-button';
+                    deleteBtn.onclick = function () {
+                      previewContainer.removeChild(imgDiv);
+                      const fileList = Array.from(files);
+                      fileList.splice(index, 1);
+                      event.target.files = new FileList(fileList);
                     };
-                    reader.readAsDataURL(file);
+              
+                    imgDiv.appendChild(img);
+                    imgDiv.appendChild(deleteBtn);
+                    previewContainer.appendChild(imgDiv);
+              
+                    img.onclick = function () {
+                      openCropModal(img);
+                    };
+                  };
+                  reader.readAsDataURL(file);
                 });
-            }
-
+              }
             function deleteImage(imageName) {
                 const imgDiv = document.querySelector(`img[src="/uploads/${imageName}"]`).parentNode;
                 imgDiv.parentNode.removeChild(imgDiv);
@@ -183,38 +197,50 @@
             function previewImages(event) {
                 const files = event.target.files;
                 const previewContainer = document.getElementById('image-preview');
+                const maxImages = 3;
+              
+                if (files.length > maxImages) {
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'You can only upload up to 3 images',
+                    icon: 'error',
+                  });
+                  return;
+                }
+              
                 previewContainer.innerHTML = '';
-
+              
                 Array.from(files).forEach((file, index) => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imgDiv = document.createElement('div');
-                        imgDiv.className = 'image-preview-item';
-
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className = 'image-preview-image';
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.innerText = 'Delete';
-                        deleteBtn.className = 'image-delete-button';
-                        deleteBtn.onclick = function () {
-                            previewContainer.removeChild(imgDiv);
-                            updateFileInput();
-                        };
-
-                        imgDiv.appendChild(img);
-                        imgDiv.appendChild(deleteBtn);
-                        previewContainer.appendChild(imgDiv);
-
-                        img.onclick = function () {
-                            openCropModal(img);
-                        };
+                  const reader = new FileReader();
+                  reader.onload = function (e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'image-preview-item';
+              
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview-image';
+              
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.innerText = 'Delete';
+                    deleteBtn.className = 'image-delete-button';
+                    deleteBtn.onclick = function () {
+                      previewContainer.removeChild(imgDiv);
+                      const fileList = Array.from(files);
+                      fileList.splice(index, 1);
+                      event.target.files = new FileList(fileList);
                     };
-                    reader.readAsDataURL(file);
+              
+                    imgDiv.appendChild(img);
+                    imgDiv.appendChild(deleteBtn);
+                    previewContainer.appendChild(imgDiv);
+              
+                    img.onclick = function () {
+                      openCropModal(img);
+                    };
+                  };
+                  reader.readAsDataURL(file);
                 });
-            }
-
+              }
             function openCropModal(imgElement) {
                 const cropModal = document.getElementById('cropModal');
                 const cropImage = document.getElementById('cropperImage');
