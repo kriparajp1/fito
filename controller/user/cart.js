@@ -94,6 +94,7 @@ const calculateDiscount = async (cartItems) => {
 
 const getCart = async (req, res) => {
   try {
+    const er=req.query.er
     if (req.session.user) {
       const user = await userBase.findOne({ email: req.session.user });
       const status = user ? true : false;
@@ -114,6 +115,7 @@ const getCart = async (req, res) => {
           totalPrice: 0,
           discountRate: 0,
           status,
+          er
         });
       }
 
@@ -134,6 +136,7 @@ const getCart = async (req, res) => {
         totalPrice,
         discountRate: discountRate.toFixed(2), // Round to 2 decimal places
         status: !!req.session.user,
+        er
       });
     } else {
       res.redirect("/login");

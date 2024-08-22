@@ -8,318 +8,288 @@
     background-color: #2b3f5c;
     }
 </style>
-    <form id="checkoutForm" action="/place-cart-order" method="post">
-        <div class="checkout-container">
-            <div class="checkout-billing">
-                <h2>Billing details</h2>
-                <div class="check-out-container">
-                    <div class="check-out-order-summary">
-                        <h2>Your Order</h2>
-                        <% cartItems.forEach((item, index)=> { %>
-                            <div class="check-out-order-item">
-                                <div class="check-out-product-info">
-                                    <input type="hidden" name="orderedItems[<%= index %>][productId]"
-                                        value="<%= item.productId %>">
-                                    <input type="hidden" name="orderedItems[<%= index %>][product_name]"
-                                        value="<%= item.product.product_name %>">
-                                    <input type="hidden" name="orderedItems[<%= index %>][product_images]"
-                                        value="<%= item.product.product_image[0] %>">
-                                    <input type="hidden" name="orderedItems[<%= index %>][price]"
-                                        value="<%= item.product.product_price %>">
-                                    <input type="hidden" name="orderedItems[<%= index %>][quantity]"
-                                        value="<%= item.quantity %>">
-                                    <h3>
-                                        <%= item.product.product_name %>
-                                    </h3>
-                                    <img src="/image/<%= item.product.product_image[0] %>" alt="Product Image">
-                                </div>
-                                <div class="check-out-product-details">
-                                    <p>Qty: <%= item.quantity %>
-                                    </p>
-                                    <p>Price: ₹<%= item.product.product_price %>
-                                    </p>
-                                </div>
+<form id="checkoutForm" action="/place-cart-order" method="post">
+    <div class="checkout-container">
+        <div class="checkout-billing">
+            <h2>Billing details</h2>
+            <div class="check-out-container">
+                <div class="check-out-order-summary">
+                    <h2>Your Order</h2>
+                    <% cartItems.forEach((item, index)=> { %>
+                        <div class="check-out-order-item">
+                            <div class="check-out-product-info">
+                                <input type="hidden" name="orderedItems[<%= index %>][productId]"
+                                    value="<%= item.productId %>">
+                                <input type="hidden" name="orderedItems[<%= index %>][product_name]"
+                                    value="<%= item.product.product_name %>">
+                                <input type="hidden" name="orderedItems[<%= index %>][product_images]"
+                                    value="<%= item.product.product_image[0] %>">
+                                <input type="hidden" name="orderedItems[<%= index %>][price]"
+                                    value="<%= item.product.product_price %>">
+                                <input type="hidden" name="orderedItems[<%= index %>][quantity]"
+                                    value="<%= item.quantity %>">
+                                <h3>
+                                    <%= item.product.product_name %>
+                                </h3>
+                                <img src="/image/<%= item.product.product_image[0] %>" alt="Product Image">
                             </div>
-                            <% }) %>
-                    </div>
-                    <div class="check-out-address-selection">
-                        <h2>Choose Address</h2>
-                        <div class="check-out-address-dropdown">
-                            <% if( addresses==0){ %>
-                                <p>No addresses found. Please add a new address.</p>
-                                <% }else{ %>
-                                    <select name="address" id="address-select">
-                                        <option value="<%= addresses[0].address._id %>">select address to delivery
-                                        </option>
-                                        <% addresses.forEach(function(address) { %>
-                                            <option value="<%= address._id %>">
-                                                <%= address.address %>, <%= address.city %>, <%= address.state %>
-                                            </option>
-                                            <% }); %>
-                                    </select>
-                                    <% } %>
+                            <div class="check-out-product-details">
+                                <p>Qty: <%= item.quantity %>
+                                </p>
+                                <p>Price: ₹<%= item.product.product_price %>
+                                </p>
+                            </div>
                         </div>
-                        <button type="button" class="check-out-add-address" onclick="openModal()">Add address</button>
-                    </div>
+                        <% }) %>
                 </div>
-            </div>
-            <div class="checkout-summary">
-                <h2>Your order</h2>
-                <div class="checkout-order-summary">
-                    <p>No of Products: <span>
-                            <%= cartItems.length %>
-                        </span></p>
-                    <p>Subtotal: <span>₹<%= cartTotal %></span></p>
-                    <p>Discount: <span>₹<%= discount%></span></p>
-                    <p>Shipping: <span>Free</span></p>
-                    <p>Total: <span>₹<%= afterDiscount%></span></p>
-                    <div class="checkout-coupon">
-                        <select class="coupon" name="couponCode" id="">
-                            <option value="Enter the Coupon Code">Enter the Coupon Code</option>
-                            <% coupons.forEach(function(coupons) { %>
-                                <option value="<%= coupons._id %>">
-                                    <%= coupons.name %>
-                                </option>
-                                <% }); %>
-                        </select>
-                        <button type="button">Apply</button>
-                    </div>
-                    <p>Payable Amount: <span>₹<%= afterDiscount%></span></p>
-                </div>
-                <div class="checkout-payment-methods">
-                    <div>
-                        <% if(afterDiscount<1000){ %>
-                            <label for="paymentCOD"></label><input type="radio" name="paymentMethod" value="COD"
-                                id="paymentCOD">Cash on Delivery</label>
-                            <% } else { %>
-                                <p>cash on delivery not available more than 1000</p>
+                <div class="check-out-address-selection">
+                    <h2>Choose Address</h2>
+                    <div class="check-out-address-dropdown">
+                        <% if( addresses==0){ %>
+                            <p>No addresses found. Please add a new address.</p>
+                            <% }else{ %>
+                                <select name="address" id="address-select">
+                                    <option value="<%= addresses[0].address._id %>">select address to delivery
+                                    </option>
+                                    <% addresses.forEach(function(address) { %>
+                                        <option value="<%= address._id %>">
+                                            <%= address.address %>, <%= address.city %>, <%= address.state %>
+                                        </option>
+                                        <% }); %>
+                                </select>
                                 <% } %>
                     </div>
-                    <div>
-                        <% if(afterDiscount<(wallet===0?wallet:wallet.amount)){ %>
-                            <label><input type="radio" name="paymentMethod" value="Wallet"> Wallet <h6>Available wallet
-                                    balance:₹ <%= wallet.amount%>
-                                </h6></label>
-                            <% }else { %>
-                                <p>Insufficient wallet balance for this transaction.</p>
-                                <% } %>
-                    </div>
-                    <div>
-                        <label for="paymentRazorPay"></label><input type="radio" name="paymentMethod" value="RazorPay"
-                            id="paymentRazorPay" required>RazorPay</label>
-
-                    </div>
+                    <button type="button" class="check-out-add-address" onclick="openModal()">Add address</button>
                 </div>
-                <button style="margin-top: 31px;" type="submit" class="checkout-place-order" id="placeOrderBtn">Place
-                    Order</button>
             </div>
         </div>
-    </form>
-
-    <!-- Address Modal -->
-    <div id="addressModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div class="checkout-billing" style="border-radius: 1rem; border: white; border-style: groove;">
-                <h2>Add Address</h2>
-                <form id="addAddressForm" action="/add-address" method="post">
-                    <div class="checkout-form-group">
-                        <label for="firstName">Name *</label>
-                        <input type="text" id="firstName" name="name" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <label for="address">address *</label>
-                        <input type="text" id="address" name="address" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <label for="city">district *</label>
-                        <input type="text" id="city" name="district" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <label for="state">State *</label>
-                        <input type="text" id="state" name="state" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <label for="pincode">Pincode *</label>
-                        <input type="text" id="pincode" name="pincode" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <label for="phone">Phone Number *</label>
-                        <input type="text" id="phone" name="mobile" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <label for="email">Landmark *</label>
-                        <input type="email" id="email" name="landmark" required>
-                    </div>
-                    <div class="checkout-form-group">
-                        <input type="checkbox" id="saveInfo" name="saveInfo">
-                        <label for="saveInfo">Save this information for faster checkout next time</label>
-                    </div>
-                    <button type="submit">Save Address</button>
-                </form>
+        <div class="checkout-summary">
+            <h2>Your order</h2>
+            <div class="checkout-order-summary">
+                <p>No of Products: <span>
+                        <%= cartItems.length %>
+                    </span></p>
+                <p>Subtotal: <span>₹<%= cartTotal %></span></p>
+                <p>Discount: <span>₹<%= discount%></span></p>
+                <p>Shipping: <span>Free</span></p>
+                <p id="cart-total">Total: <span>₹<%= afterDiscount%></span></p>
+                <div class="checkout-coupon">
+                    <select class="coupon" name="couponCode" id="coupon-select">
+                        <option value="Enter the Coupon Code">Enter the Coupon Code</option>
+                        <% coupons.forEach(function(coupons) { %>
+                            <option value="<%= coupons._id %>">
+                                <%= coupons.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button type="button">Apply</button>
+                </div>
+                <p>Payable Amount: <span>₹<%= afterDiscount%></span></p>
             </div>
+            <div class="checkout-payment-methods">
+                <div>
+                    <% if(afterDiscount<1000){ %>
+                        <label for="paymentCOD"></label><input type="radio" name="paymentMethod" value="COD"
+                            id="paymentCOD">Cash on Delivery</label>
+                        <% } else { %>
+                            <p>cash on delivery not available more than 1000</p>
+                            <% } %>
+                </div>
+                <div>
+                    <% if(afterDiscount<(wallet===0?wallet:wallet.amount)){ %>
+                        <label><input type="radio" name="paymentMethod" value="Wallet"> Wallet <h6>Available wallet
+                                balance:₹ <%= wallet.amount%>
+                            </h6></label>
+                        <% }else { %>
+                            <p>Insufficient wallet balance for this transaction.</p>
+                            <% } %>
+                </div>
+                <div>
+                    <label for="paymentRazorPay"></label><input type="radio" name="paymentMethod" value="RazorPay"
+                        id="paymentRazorPay" required>RazorPay</label>
+
+                </div>
+            </div>
+            <button style="margin-top: 31px;" type="submit" class="checkout-place-order" id="placeOrderBtn">Place
+                Order</button>
         </div>
     </div>
+</form>
 
-    <%- include("footer") %>
+<!-- Address Modal -->
+<div id="addressModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="checkout-billing" style="border-radius: 1rem; border: white; border-style: groove;">
+            <h2>Add Address</h2>
+            <form id="addAddressForm" action="/add-address" method="post">
+                <div class="checkout-form-group">
+                    <label for="firstName">Name *</label>
+                    <input type="text" id="firstName" name="name" required>
+                </div>
+                <div class="checkout-form-group">
+                    <label for="address">address *</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+                <div class="checkout-form-group">
+                    <label for="city">district *</label>
+                    <input type="text" id="city" name="district" required>
+                </div>
+                <div class="checkout-form-group">
+                    <label for="state">State *</label>
+                    <input type="text" id="state" name="state" required>
+                </div>
+                <div class="checkout-form-group">
+                    <label for="pincode">Pincode *</label>
+                    <input type="text" id="pincode" name="pincode" required>
+                </div>
+                <div class="checkout-form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="text" id="phone" name="mobile" required>
+                </div>
+                <div class="checkout-form-group">
+                    <label for="email">Landmark *</label>
+                    <input type="email" id="email" name="landmark" required>
+                </div>
+                <div class="checkout-form-group">
+                    <input type="checkbox" id="saveInfo" name="saveInfo">
+                    <label for="saveInfo">Save this information for faster checkout next time</label>
+                </div>
+                <button type="submit">Save Address</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-        <script>
-           
-            var modal = document.getElementById("addressModal");
+<%- include("footer") %>
 
-           
-            function openModal() {
-                modal.style.display = "block";
-            }
+    <script>
+       
+        var modal = document.getElementById("addressModal");
 
-            
-            function closeModal() {
+       
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        
+        window.onclick = function (event) {
+            if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+    </script>
 
-            
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+
+        const addressSelect = document.getElementById('address-select');
+        let address = ''
+        addressSelect.addEventListener('change', (e) => {
+            address = e.target.value
+        })
+
+        console.log(address)
+        document.getElementById('placeOrderBtn').addEventListener('click', async function (event) {
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            //address validation
+            if (paymentMethod === 'Wallet') {
+                event.preventDefault()
+
+                fetch("/place-cart-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ address, paymentMethod })
+                }).then((res) => {
+                    if (res.ok) {
+                        window.location.href = '/thankyou'
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                })
+
             }
-        </script>
 
-        <style>
-            /* Modal styles */
-            .modal {
-                display: none;
-                /* Hidden by default */
-                position: fixed;
-                /* Stay in place */
-                z-index: 1;
-                /* Sit on top */
-                left: 0;
-                top: 0;
-                width: 100%;
-                /* Full width */
-                height: 100%;
-                /* Full height */
-                overflow: auto;
-                /* Enable scroll if needed */
-                background-color: rgb(0, 0, 0);
-                /* Fallback color */
-                background-color: rgba(0, 0, 0, 0.4);
-                /* Black w/ opacity */
-                padding-top: 60px;
-            }
-
-            .modal-content {
-                background-color: #fefefe;
-                margin: 5% auto;
-                /* 15% from the top and centered */
-                padding: 20px;
-                border: 1px solid #888;
-                width: 80%;
-                /* Could be more or less, depending on screen size */
-            }
-
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-        </style>
-
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script>
-
-            const addressSelect = document.getElementById('address-select');
-            let address = ''
-            addressSelect.addEventListener('change', (e) => {
-                address = e.target.value
-            })
-
-            console.log(address)
-            document.getElementById('placeOrderBtn').addEventListener('click', async function (event) {
-                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-
-                //address validation
-                if (paymentMethod === 'Wallet') {
-                    event.preventDefault()
-
-                    fetch("/place-cart-order", {
+            if (paymentMethod === 'RazorPay') {
+                event.preventDefault(); // Prevent default form submission
+                try {
+                    const URL = "/render-razorPay";
+                    const res = await fetch(URL, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ address, paymentMethod })
-                    }).then((res) => {
-                        if (res.ok) {
-                            window.location.href = '/thankyou'
                         }
-                    }).catch((err) => {
-                        console.log(err)
                     })
+                    const data = await res.json();
+                    if (data.success) {
+                        var options = {
+                            "key": "rzp_test_D1hrPYtWhv0psE", // Enter the Key ID generated from the Dashboard
+                            "amount": data.totalAmount * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                            "currency": "INR",
+                            "name": "FITO", //your business name
+                            "description": "Stay Fit for FITO",
+                            "order_id": data.orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                            "handler": function (response) {
 
-                }
-
-                if (paymentMethod === 'RazorPay') {
-                    event.preventDefault(); // Prevent default form submission
-                    try {
-                        const URL = "/render-razorPay";
-                        const res = await fetch(URL, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        })
-                        const data = await res.json();
-                        if (data.success) {
-                            var options = {
-                                "key": "rzp_test_D1hrPYtWhv0psE", // Enter the Key ID generated from the Dashboard
-                                "amount": data.totalAmount * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-                                "currency": "INR",
-                                "name": "FITO", //your business name
-                                "description": "Stay Fit for FITO",
-                                "order_id": data.orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-                                "handler": function (response) {
-
-                                    fetch('/place-cart-order', {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify({ address, paymentMethod })
-                                    }).then((res) => {
-                                        if (res.ok) {
-                                            window.location.href = '/thankyou'
-                                        }
-                                    }).catch((err) => {
-                                        console.log(err)
-                                    })
-
-                                    //verifyPayment(response, data.orderId);
-                                },
-                                "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-                                    "name": data.userName, //your customer's name
-                                    "email": data.userEmail,
-                                    "contact": data.userPhone  //Provide the customer's phone number for better conversion rates 
-                                },
-                                "notes": {
-                                    "address": "Razorpay Corporate Office"
-                                },
-                                "theme": {
-                                    "color": "#3399cc"
-                                }
-                            };
-                            var rzp1 = new Razorpay(options);
-                            rzp1.on('payment.failed', function (response) {
-                                fetch('/place-cart-order-failed', {
+                                fetch('/place-cart-order', {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json"
@@ -327,47 +297,102 @@
                                     body: JSON.stringify({ address, paymentMethod })
                                 }).then((res) => {
                                     if (res.ok) {
-                                        window.location.href = '/failed'
+                                        window.location.href = '/thankyou'
                                     }
                                 }).catch((err) => {
                                     console.log(err)
                                 })
-                            });
-                            rzp1.open();
-                        }
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }
-            });
 
-            function verifyPayment(payment, orderId) {
-                console.log("verifyPayment");
-                fetch('/verify-razorpay-payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        payment,
-                        orderId,
-                        orderedItems: cartItems,
-                        address: selectedAddress,
-                        paymentMethod: 'RazorPay',
-                        couponCode: appliedCouponCode
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            window.location.href = '/thankyou';
-                        } else {
-                            alert('Payment verification failed. Please contact support.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred during payment verification.');
-                    });
+                                //verifyPayment(response, data.orderId);
+                            },
+                            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                                "name": data.userName, //your customer's name
+                                "email": data.userEmail,
+                                "contact": data.userPhone  //Provide the customer's phone number for better conversion rates 
+                            },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.on('payment.failed', function (response) {
+                            fetch('/place-cart-order-failed', {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ address, paymentMethod })
+                            }).then((res) => {
+                                if (res.ok) {
+                                    window.location.href = '/failed'
+                                }
+                            }).catch((err) => {
+                                console.log(err)
+                            })
+                        });
+                        rzp1.open();
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
             }
-        </script>
+        });
+
+        function verifyPayment(payment, orderId) {
+            console.log("verifyPayment");
+            fetch('/verify-razorpay-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    payment,
+                    orderId,
+                    orderedItems: cartItems,
+                    address: selectedAddress,
+                    paymentMethod: 'RazorPay',
+                    couponCode: appliedCouponCode
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        window.location.href = '/thankyou';
+                    } else {
+                        alert('Payment verification failed. Please contact support.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during payment verification.');
+                });
+        }
+    </script>
+    <script>
+        const couponSelect = document.getElementById('coupon-select');
+        const cartTotalElement = document.getElementById('cart-total');
+      
+        couponSelect.addEventListener('change', async (e) => {
+          const couponCode = e.target.value;
+          const cartTotal = parseFloat(cartTotalElement.textContent);
+      
+          try {
+            const response = await fetch('/apply-coupon', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ couponCode, cartTotal })
+            });
+      
+            const { discountValue } = await response.json();
+            const newCartTotal = cartTotal - discountValue;
+            cartTotalElement.textContent = `₹${newCartTotal.toFixed(2)}`;
+          } catch (error) {
+            console.error(error);
+          }
+        });
+      </script>

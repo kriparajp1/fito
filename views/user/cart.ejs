@@ -44,8 +44,7 @@
                 </div>
                 <div class="cart-checkout-item">
                     <span>Discount</span>
-                    <span id="discount-price">: Total Discount: ₹<%= discount.toFixed(2) %> (<%= discountRate %>%)<<
-                                    /span>
+                    <span id="discount-price">: Total Discount: ₹<%= discount.toFixed(2) %> (<%= discountRate %>%)<</span>
                                     <p>Total Discount: ₹<%= discount.toFixed(2) %> (<%= discountRate %>%)</p>
                 </div>
                 <div class="cart-checkout-item total">
@@ -55,7 +54,9 @@
                 <% if(items.length>=1){ %>
                     <a href="/cart-checkout"><button class="cart-checkout-button">Proceed to pay</button></a>
                     <% } %>
-
+                <% if(er){ %>
+                    <h3><%=er%></h3>
+                <% } %>
             </div>
         </div>
     </div>

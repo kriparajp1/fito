@@ -708,6 +708,29 @@ const failedPlaceCartOrder = async (req, res) => {
   }
 };
 
+const applyCoupon = async (req, res) => {
+  const couponCode = req.body.couponCode;
+  const cartTotal = req.body.cartTotal;
+
+  try {
+    const coupon = await Coupons.findOne({ _id: couponCode });
+    if (!coupon) {
+      return res.status(404).json({ message: "Coupon not found" });
+    }
+
+    const discountValue = calculateDiscount(coupon.value, cartTotal);
+    res.status(200).json({ discountValue });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error applying coupon" });
+  }
+};
+
+const calculateDiscount = (couponValue, cartTotal) => {
+  
+  const discountValue = (cartTotal * couponValue) / 100;
+  return discountValue;
+};
 module.exports = {
   renderCheckoutPage,
   placeOrder,
@@ -719,4 +742,5 @@ module.exports = {
   renderRazorPay,
   failedPlaceCartOrder,
   failure,
+  applyCoupon
 };

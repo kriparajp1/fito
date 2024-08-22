@@ -15,6 +15,7 @@ const orderView = require("../controller/user/orderDetail");
 const thankyou = require("../controller/user/thankyou");
 const passport = require("../controller/user/google");
 const uncompletedOrder = require("../controller/user/uncompletedOrder.js");
+const cartCheck=require("../middleware/stockChecker.js")
 
 const userSchema = require("../models/usermodel");
 
@@ -69,11 +70,11 @@ route.post(
 );
 
 // checkOut
-route.get("/checkOut", isUser, wishCount, checkOut.renderCheckoutPage);
+route.get("/checkOut",cartCheck, isUser, wishCount, checkOut.renderCheckoutPage);
 route.post("/add-address", isUser, wishCount, checkOut.addAddress);
 route.post("/place-order", isUser, wishCount, checkOut.placeOrder);
 route.post("/buy-now", isUser, wishCount, checkOut.buyNow);
-route.get("/cart-checkout", isUser, wishCount, checkOut.renderCartCheckoutPage);
+route.get("/cart-checkout",cartCheck,isUser, wishCount, checkOut.renderCartCheckoutPage);
 route.post("/place-cart-order", isUser, wishCount, checkOut.placeCartOrder);
 route.post(
   "/place-cart-order-failed",
@@ -126,6 +127,7 @@ route.post(
   wishCount,
   uncompletedOrder.retryPaymentPost
 );
+route.post("/apply-coupon",checkOut.applyCoupon)
 // route.all("*",usercontroller.erroro)
 
 module.exports = route;
