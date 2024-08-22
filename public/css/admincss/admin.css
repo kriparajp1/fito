@@ -19,6 +19,14 @@ body, html {
     position: fixed;
     width: 97%;
 }
+#nameError{
+    color: red;
+    font-size: large;
+}
+#dateError{
+    color: red;
+    font-size: large;
+}
 
 .admin-login-logo span {
     font-size: 24px;

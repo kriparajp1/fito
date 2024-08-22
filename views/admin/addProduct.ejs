@@ -197,6 +197,10 @@
                     nameError.innerText = "enter a valid name"
                     isValid = false;
                 }
+                if (!validateNameCharacters(name)) {
+                    nameError.innerHTML = "<h6>Coupon name cannot contain only symbols and spaces</h6>";
+                    isValid = false;
+                }
                 if (!validateNumber(number)) {
                     numberError.innerText = "do not enter the negative value"
                     isValid = false;
@@ -217,6 +221,9 @@
             function validateNumber(number) {
                 var numberRegex = number > 0
                 return number > 0;
+            }
+            function validateNameCharacters(name) {
+                return /[a-zA-Z0-9]/.test(name); 
             }
             function validateName(name) {
                 console.log("jjjjj", name)

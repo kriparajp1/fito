@@ -25,7 +25,7 @@
                         
                         <div class="addcoupons-image">
                             <img src="https://cdnl.iconscout.com/lottie/premium/thumb/coupons-6928628-5650291.gif"
-                                alt="Coupon"> <!-- Replace with actual path -->
+                                alt="Coupon"> 
                         </div>
                     </div>
                 </div>
@@ -58,6 +58,10 @@
                 numberError.innerText = "Do not enter a negative value";
                 isValid = false;
             }
+            if (!validateNameCharacters(name)) {
+                nameError.innerHTML = "<h6>Coupon name cannot contain only symbols and spaces</h6>";
+                isValid = false;
+            }
             if (!validateDate(expiryDate)) {
                 dateError.innerText = "Expiry date cannot be in the past";
                 isValid = false;
@@ -70,7 +74,9 @@
         function validateNumber(number) {
             return number > 0;
         }
-        
+        function validateNameCharacters(name) {
+            return /[a-zA-Z0-9]/.test(name); // checks if the name contains at least one letter or number
+        }
         function validateName(name) {
             return name.trim().length > 0;
         }

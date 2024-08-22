@@ -1,4 +1,14 @@
 <%- include("header") %>
+<style>
+    .wishlist-cart-button{
+        background-color: #476686;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+</style>
     <div class="wishlist-container" style="margin: auto;">
         <div class="wishlist-header">
             <h1 class="wishlist-title">Wishlist (<%= wishlist.products.length %>)</h1>
@@ -25,7 +35,7 @@
                                     <%= product.product.product_price %>
                                 </p>
                                 <button class="wishlist-cart-button"
-                                    onclick="addToCart('<%= product.product._id %>')">Add to cart</button>
+                                    onclick="addToCart('<%= product.product._id %>')" >Add to cart</button>
                                 <a href="/productView/<%= product.product._id %>"><button
                                         class="wishlist-buy-button">Buy Now</button></a>
                             </div>

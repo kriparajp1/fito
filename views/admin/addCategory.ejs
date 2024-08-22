@@ -58,12 +58,19 @@
                     nameError.innerText = "enter a valid name"
                     isValid = false;
                 }
+                if (!validateNameCharacters(name)) {
+                    nameError.innerHTML = "<h6>Coupon name cannot contain only symbols and spaces</h6>";
+                    isValid = false;
+                }
 
 
 
                 function validateName(categoryName) {
                     var space = categoryName.split("").every((a, b) => a == " ") ? false : true
                     return space
+                }
+                function validateNameCharacters(name) {
+                    return /[a-zA-Z0-9]/.test(name); // checks if the name contains at least one letter or number
                 }
 
                 const response = await fetch(`/admin/checkCategoryExists?categoryName=${encodeURIComponent(categoryName)}`);
