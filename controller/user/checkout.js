@@ -8,6 +8,7 @@ const Cart = require("../../models/cartModel");
 const Offer = require("../../models/offerModel");
 const mongoose = require("mongoose");
 const Wallet = require("../../models/wallet");
+const Coupons=require("../../models/couponModel")
 
 const razorpay = new Razorpay({
   key_id: process.env.KEY_ID,
@@ -148,6 +149,8 @@ const buyNow = async (req, res) => {
 const renderCartCheckoutPage = async (req, res) => {
   try {
     const user = await userbasecollections.findOne({ email: req.session.user });
+    const currentDate = new Date();
+    const notExpiredCoupons = await Coupons.find({ expiryDate: { $gt: currentDate } });
     const cartDetails = await Cart.findOne({ user: user._id })
       .populate("items")
       .populate("items.productId");
@@ -177,7 +180,7 @@ const renderCartCheckoutPage = async (req, res) => {
     const productsWithOffer = cartDetails.items.map((product) => {
       let offerPrice = 0;
 
-      // Check for product-specific and category-specific offers
+      
       offers.forEach((offer) => {
         if (offer.referenceId.toString() === product.product._id.toString()) {
           offerPrice =
@@ -187,14 +190,14 @@ const renderCartCheckoutPage = async (req, res) => {
       });
 
       return {
-        offerPrice: +offerPrice.toFixed(2), // Round to 2 decimal places
+        offerPrice: +offerPrice.toFixed(2), 
       };
     });
 
     const productsWithCategoryOffer = cartDetails.items.map((product) => {
       let offerPrice = 0;
 
-      // Check for product-specific and category-specific offers
+      
       offers.forEach((offer) => {
         if (
           offer.referenceId.toString() ===
@@ -206,7 +209,7 @@ const renderCartCheckoutPage = async (req, res) => {
         }
       });
       return {
-        offerPrice: +offerPrice.toFixed(2), // Round to 2 decimal places
+        offerPrice: +offerPrice.toFixed(2), 
       };
     });
 
@@ -239,12 +242,13 @@ const renderCartCheckoutPage = async (req, res) => {
       wallet,
       status: true,
       cartItems,
+      coupons:notExpiredCoupons,
       addresses,
       discount: offerTotal,
       cartTotal: totalAmount,
       afterDiscount: grandTotal,
       user: user.firstName,
-      user, // Pass the user object to the template
+      user, 
     });
   } catch (error) {
     console.error(error);

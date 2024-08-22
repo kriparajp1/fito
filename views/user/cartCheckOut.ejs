@@ -1,5 +1,13 @@
 <%- include("header") %>
-
+<style>
+    .coupon{
+    width: 29rem;
+    border-radius: 7px;
+    border: 1px;
+    border-style: solid;
+    background-color: #2b3f5c;
+    }
+</style>
     <form id="checkoutForm" action="/place-cart-order" method="post">
         <div class="checkout-container">
             <div class="checkout-billing">
@@ -66,7 +74,14 @@
                     <p>Shipping: <span>Free</span></p>
                     <p>Total: <span>₹<%= afterDiscount%></span></p>
                     <div class="checkout-coupon">
-                        <input type="text" placeholder="Enter the Coupon Code" name="couponCode">
+                        <select class="coupon" name="couponCode" id="">
+                            <option value="Enter the Coupon Code">Enter the Coupon Code</option>
+                            <% coupons.forEach(function(coupons) { %>
+                                <option value="<%= coupons._id %>">
+                                    <%= coupons.name %>
+                                </option>
+                                <% }); %>
+                        </select>
                         <button type="button">Apply</button>
                     </div>
                     <p>Payable Amount: <span>₹<%= afterDiscount%></span></p>
@@ -149,20 +164,20 @@
     <%- include("footer") %>
 
         <script>
-            // Get the modal
+           
             var modal = document.getElementById("addressModal");
 
-            // Function to open the modal
+           
             function openModal() {
                 modal.style.display = "block";
             }
 
-            // Function to close the modal
+            
             function closeModal() {
                 modal.style.display = "none";
             }
 
-            // Close the modal if the user clicks outside of the modal
+            
             window.onclick = function (event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
